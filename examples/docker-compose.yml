@@ -1,0 +1,54 @@
+# CRAB Docker Compose Example
+# ===========================
+# Run a fleet of CRAB daemons in containers, each with a different bus backend.
+#
+# Usage:
+#   docker-compose -f examples/docker-compose.yml up --build
+#
+# Services:
+#   - crab-stdout: Prints receipts to container stdout
+#   - crab-tsv: Writes receipts to a shared TSV file
+#   - crab-jsonl: Writes receipts to a shared JSONL file
+#
+# View logs:
+#   docker-compose logs -f crab-stdout
+#
+# Inspect shared outputs:
+#   cat examples/data/receipts.tsv
+#   cat examples/data/receipts.jsonl
+
+version: "3.8"
+
+services:
+  crab-stdout:
+    build:
+      context: ..
+      dockerfile: examples/Dockerfile
+    command: >
+      python crab_daemon.py --once --verbose --identity container-stdout
+
+  crab-tsv:
+    build:
+      context: ..
+      dockerfile: examples/Dockerfile
+    volumes:
+      - ./data:/data
+    command: >
+      sh -c "mkdir -p /data && python crab_daemon.py --once --verbose
+      --identity container-tsv
+      --config /dev/stdin"
+    environment:
+      - CRAB_CONFIG={"identity":"container-tsv","bus":{"backend":"tsv","path":"/data/receipts.tsv"},"lanes":[{"name":"git-audit","enabled":true,"interval_seconds":0,"cooldown_seconds":0}]}
+
+  crab-jsonl:
+    build:
+      context: ..
+      dockerfile: examples/Dockerfile
+    volumes:
+      - ./data:/data
+    command: >
+      sh -c "mkdir -p /data && python crab_daemon.py --once --verbose
+      --identity container-jsonl
+      --config /dev/stdin"
+    environment:
+      - CRAB_CONFIG={"identity":"container-jsonl","bus":{"backend":"jsonl","path":"/data/receipts.jsonl"},"lanes":[{"name":"git-audit","enabled":true,"interval_seconds":0,"cooldown_seconds":0}]}

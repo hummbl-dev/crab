@@ -1,66 +1,121 @@
 # CRAB
 
-CRAB is a lightweight operating methodology for multi-agent work:
+**Coordination Receipts for Agent Behavior**
 
-**Check -> Reason -> Act -> Bus**
+[![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://python.org)
+[![Tests](https://img.shields.io/badge/tests-18%2F18%20passing-brightgreen.svg)](tests/test_daemon.py)
 
-It exists to keep autonomous or semi-autonomous workers synchronized when more
-than one session, host, model, or human can touch the same work surface.
+CRAB is a lightweight coordination protocol for multi-agent systems:
 
-CRAB is not a chat ritual. It is a coordination contract:
+> **Check → Reason → Act → Bus**
 
-1. **Check** the live state before acting.
-2. **Reason** against the current state, instructions, and stop conditions.
-3. **Act** only after the work surface is understood.
-4. **Bus** the result before closing the loop with the requester.
+Every autonomous turn reads live state, decides whether to act, performs the work, and posts a receipt to a coordination bus. No more waking up wondering what your agents did overnight.
 
-## Why It Exists
+[Website](https://hummbl-dev.github.io/crab) · [Docs](docs/methodology.md) · [Examples](examples/) · [Issues](https://github.com/hummbl-dev/crab/issues)
 
-Multi-agent systems fail when agents inherit stale state, act on the wrong
-branch, miss another worker's blocker, or rely on a human to relay context
-between sessions. CRAB makes the state check and the coordination receipt part
-of every meaningful turn.
+---
 
-## Repository Contents
+## Why CRAB
 
-- [Methodology](docs/methodology.md) - the canonical CRAB method.
-- [Implementation Guide](docs/implementation-guide.md) - how to adapt CRAB to a repo, team, or agent fleet.
-- [Adoption Checklist](docs/adoption-checklist.md) - practical rollout checklist.
-- [Message Types](docs/message-types.md) - common bus message taxonomy.
-- [Source Notes](docs/source-notes.md) - origin and relation to HUMMBL founder-mode.
-- `crab_daemon.py` — **portable reference implementation** (see below)
+Multi-agent systems fail when agents:
+- Work on stale state
+- Overwrite each other's changes
+- Fail silently and leave no trace
+- Race each other without coordination
 
-## CRAB Daemon — Autonomous Agent Loop
+CRAB makes every agent turn **observable** and **accountable**. The bus receipt tells you exactly what happened, when, and why.
 
-`crab_daemon.py` is a standalone, zero-dependency Python script that implements
-the full CRAB protocol as a continuous background process. You can start it and
-leave it running unattended.
+## Features
 
-### Features
+- **4-step protocol** — Check, Reason, Act, Bus. Structured, repeatable, safe.
+- **Pluggable bus backends** — TSV, JSONL, stdout, or custom callback. One-line switch.
+- **Multi-lane work streams** — Independent lanes with separate schedules and stop conditions.
+- **Zero dependencies** — Python 3.8+ stdlib only. No `pip install`.
+- **Container ready** — Single file. Drop into Docker, Kubernetes, or systemd.
+- **Observable by design** — Every turn produces a timestamped receipt. Replay any session.
 
-- **Pluggable bus backends**: TSV, JSONL, stdout, or custom callback
-- **Lane-based work streams**: independent lanes with their own schedules
-- **CRAB stop conditions**: respects BLOCKED messages, stash checks, cooldowns
-- **Stdlib-only**: no pip install required
-- **Configurable via JSON**: edit `crab-daemon/config.json`
-
-### Quick start
+## Quick Start
 
 ```bash
-# Initialize default config
-./crab_daemon.py --init
+# Clone and enter the repo
+git clone https://github.com/hummbl-dev/crab.git
+cd crab
 
-# Run one iteration and see what it would do
-./crab_daemon.py --once --dry-run
+# Generate a default config
+python crab_daemon.py --init
+# → Default config written to: crab-daemon/config.json
 
-# Run continuously (foreground)
-./crab_daemon.py
+# Run one turn and see the output
+python crab_daemon.py --once --verbose
 
-# Run only the cleanup lane
-./crab_daemon.py --once --lane cleanup
+# Run continuously (press Ctrl+C to stop)
+python crab_daemon.py --verbose
 ```
 
-### Built-in lanes
+### Config file
+
+The daemon reads `crab-daemon/config.json`:
+
+```json
+{
+  "identity": "my-agent",
+  "bus": {
+    "backend": "tsv",
+    "path": "bus/messages.tsv"
+  },
+  "poll_interval": 60.0,
+  "lanes": [
+    {
+      "name": "cleanup",
+      "enabled": true,
+      "interval_seconds": 3600.0
+    }
+  ]
+}
+```
+
+| Backend | Output | Best for |
+|---------|--------|----------|
+| `tsv` | Tab-separated file | Human-readable, grep-friendly |
+| `jsonl` | JSON lines | Structured parsing, databases |
+| `stdout` | Console | Development, containers, systemd |
+| `callback` | Shell command | Webhooks, Slack, CI triggers |
+
+### CLI reference
+
+```bash
+python crab_daemon.py --init              # Write default config
+python crab_daemon.py --once             # Run one iteration and exit
+python crab_daemon.py --once --dry-run    # Simulate without posting
+python crab_daemon.py --lane cleanup      # Run only the cleanup lane
+python crab_daemon.py --verbose           # Debug logging
+python crab_daemon.py --config path.json  # Custom config file
+```
+
+## Examples
+
+See the [`examples/`](examples/) directory:
+
+| Example | What it shows |
+|---------|-------------|
+| [`basic.py`](examples/basic.py) | stdout backend, single turn |
+| [`custom_backend.py`](examples/custom_backend.py) | Slack webhook via callback backend |
+| [`docker-compose.yml`](examples/docker-compose.yml) | Fleet of daemons with different backends |
+
+```bash
+# Run the basic example
+python examples/basic.py
+
+# Run the Slack webhook example
+export SLACK_WEBHOOK_URL="https://hooks.slack.com/services/..."
+python examples/custom_backend.py
+
+# Run the container fleet
+docker-compose -f examples/docker-compose.yml up --build
+```
+
+## Built-in Lanes
 
 | Lane | What it does |
 |------|-------------|
@@ -68,11 +123,18 @@ leave it running unattended.
 | `git-audit` | Check worktree state, stale locks, uncommitted changes |
 | `bus-audit` | Verify bus integrity, count messages, detect malformed lines |
 
-### Adding custom lanes
+## Adding Custom Lanes
 
-Register a handler in `LANE_REGISTRY` and add the lane to your config:
+Register a handler and add the lane to your config:
 
 ```python
+# my_lanes.py
+from crab_daemon import LANE_REGISTRY, ActResult
+
+def my_lane_handler(config, lane):
+    # Your logic here
+    return ActResult(success=True, actions_taken=["did the thing"], artifacts=[], errors=[])
+
 LANE_REGISTRY["my-lane"] = my_lane_handler
 ```
 
@@ -82,28 +144,93 @@ LANE_REGISTRY["my-lane"] = my_lane_handler
     {
       "name": "my-lane",
       "enabled": true,
-      "interval_seconds": 300.0,
-      "actions": []
+      "interval_seconds": 300.0
     }
   ]
 }
 ```
 
-### Bus backends
+## Programmatic API
 
-| Backend | Format | Use case |
-|---------|--------|----------|
-| `tsv` | Tab-separated lines | Simple text bus (default) |
-| `jsonl` | JSON lines | Structured log consumption |
-| `stdout` | Console output | Development / dry-run |
-| `callback` | Shell command | Integration with existing systems |
+```python
+from crab_daemon import CrabDaemon, DaemonConfig, BusConfig, LaneConfig
+
+config = DaemonConfig(
+    identity="my-agent",
+    bus=BusConfig(backend="stdout"),
+    lanes=[LaneConfig(name="git-audit", enabled=True)]
+)
+
+daemon = CrabDaemon(config)
+
+# Run one iteration
+turns = daemon.run_once()
+
+# Or run continuously
+daemon.run()  # Press Ctrl+C to stop
+daemon.stop()
+```
+
+## Architecture
+
+```
+┌─────────────────────────────────────┐
+│           CrabDaemon                │
+│  ┌─────┐ ┌──────┐ ┌───┐ ┌─────┐   │
+│  │Check│→│Reason│→│Act│→│ Bus │   │
+│  └─────┘ └──────┘ └───┘ └─────┘   │
+│       ↑___________________↓        │
+│         (receipt posted)            │
+└─────────────────────────────────────┘
+              ↓
+         ┌──────────┐
+         │ Bus Log  │  ← tsv / jsonl / stdout / callback
+         │ (append) │
+         └──────────┘
+```
+
+## Testing
+
+```bash
+python -m pytest tests/ -v
+```
+
+18 tests covering:
+- Config serialization/deserialization
+- Check phase (git state, bus tail, blockers)
+- Reason phase (stop conditions, lane selection)
+- Act phase (cleanup, audit, error handling)
+- Bus phase (all four backends)
+- Daemon lifecycle (run_once, run, stop)
+
+## Documentation
+
+- [Methodology](docs/methodology.md) — the canonical CRAB method
+- [Implementation Guide](docs/implementation-guide.md) — adapt CRAB to your repo or team
+- [Adoption Checklist](docs/adoption-checklist.md) — practical rollout checklist
+- [Message Types](docs/message-types.md) — bus message taxonomy
+- [Source Notes](docs/source-notes.md) — origin and relation to HUMMBL founder-mode
+- [Security Audit](AUDIT.md) — redteam audit results (10/10 PASS)
+- [Productization Plan](PRODUCTIZATION.md) — roadmap from internal ops to marketable product
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for:
+- Development setup (hint: there isn't one — it's stdlib-only)
+- Code standards
+- Commit message format
+- Pull request process
+
+See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for community standards.
+
+## License
+
+Apache-2.0. See [LICENSE](LICENSE).
 
 ## Status
 
-- **Methodology**: v1.0 — stable, used in production at HUMMBL
-- **Daemon**: reference implementation in development (see Issue #1)
-- **Public release**: gated on security audit + operator decision
+- **Protocol**: v1.0 — stable, used in production at HUMMBL since 2026-04
+- **Daemon**: v1.0 — reference implementation, tested, audited
+- **Security**: [Redteam audit](AUDIT.md) — 10/10 PASS
 
-This repo is the portable methodology home; project-specific rules should
-keep their local host paths, command wrappers, identities, and guardrails in
-their own repos.
+Created by [HUMMBL Research Institute](https://hummbl.io).

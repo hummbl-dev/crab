@@ -5,3 +5,7 @@ Thumbs.db
 *.tmp
 
 __pycache__/
+
+# CRAB runtime artifacts
+bus/
+crab-daemon/
