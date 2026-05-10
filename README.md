@@ -12,7 +12,7 @@ CRAB is a lightweight coordination protocol for multi-agent systems:
 
 Every autonomous turn reads live state, decides whether to act, performs the work, and posts a receipt to a coordination bus. No more waking up wondering what your agents did overnight.
 
-[Website](https://hummbl-dev.github.io/crab) · [Docs](docs/methodology.md) · [Examples](examples/) · [Issues](https://github.com/hummbl-dev/crab/issues)
+[Landing Page](docs/index.html) · [Docs](docs/methodology.md) · [Examples](examples/) · [Issues](https://github.com/hummbl-dev/crab/issues)
 
 ---
 
