@@ -487,9 +487,115 @@ These are contextual, not chatty. Scut speaks in receipts, not paragraphs.
 
 ---
 
-## 7. TUI Chrome System
+## 7. Mascot: BERNARD — The HUMMBL Hummingbird
 
-### 7.1. Primary Container (Double Border)
+Bernard is the HUMMBL hummingbird. Where CRAB is armored and grounded, Bernard is iridescent and airborne. He hovers, pollinates, and departs. He notices before he speaks. He never pushes.
+
+> "I notice, I name, I offer. I never push."
+
+### 7.1. Who Is Bernard?
+
+Bernard is the **belonging-aware companion** — the pollinator that carries value between flowers. He is the HUMMBL brand mark rendered in ASCII: a tiny hummingbird who replaces the plain `◉` circle in founder-mode sidebar chrome and appears across all HUMMBL Terminal Core interfaces as a signal of attention, not interruption.
+
+**Relationship to the Canonical CRAB:**
+- Bernard appears *above* CRAB in fleet compositions (he notices first)
+- Bernard is never larger than CRAB when both appear (pollinator, not predator)
+- Bernard's palette (iridescent green, magenta throat) contrasts CRAB's palette (amber shell, cyan companion)
+- CRAB governs; Bernard connects
+
+**Key traits from the Hummingbird Metaphor:**
+| Trait | Real hummingbird | Terminal behavior |
+|-------|-----------------|-------------------|
+| **Hovers** | Doesn't land and stay | Brief interactions; checks in and moves on |
+| **Pollinates** | Carries value between flowers | Connects governance concepts across sessions |
+| **High metabolism** | Always needs fuel | Understands the founder energy constraint |
+| **Iridescent** | Color shifts with angle | Adapts tone to user's belonging state |
+| **Territorial** | Defends its space | Protects user's autonomy; never prescriptive |
+| **Migratory** | Follows the season | Appears contextually, not permanently |
+
+### 7.2. Bernard Sizes
+
+**Tiny (3 lines, sidebar indicator):**
+```
+     >
+   ~(o)~
+     V
+```
+
+**Small (6 lines, panel header):**
+```
+        >
+     .-(o)-.
+    /  ~ ~  \
+   (   ===   )
+    \___\___/
+      \   /
+```
+
+**Medium (12 lines, splash screen):**
+```
+              >
+           .-'''-.
+          /  o   o  \
+         |    >      |
+          \  ~~~~~~  /
+           |  ===   |
+         ~ / ~~~~~~ \ ~
+        ~  |   ||   |  ~
+       ~    \__||__/    ~
+            /  ||  \
+           /   ||   \
+          (    ||    )
+           \___/ \___/
+```
+
+### 7.3. Bernard Expressions (6 states)
+
+All expressions fit in 6 lines. Wing blur intensity indicates state:
+
+| State | Wing blur | Body | Beak |
+|-------|-----------|------|------|
+| **Idle hover** | `~ ~` (blur) | Horizontal | Forward `>` |
+| **Listening** | `/ \` (spread) | Alert, tilted | Forward `>` |
+| **Thinking** | `. .` (still) | Head tilts | Forward `>` |
+| **Suggesting** | `~ ~` (blur) | Forward lean | Extended `=>` |
+| **Celebrating** | `\ >` (loop) | Tilted up | Upward `\>` |
+| **Departing** | `~  ~` (fading) | Horizontal | Forward `>` |
+
+### 7.4. Bernard Anatomy Rules
+
+1. **Beak** always points right → forward momentum, the offer
+2. **Eyes**: `o` → `O` → `-` (normal → alert → closed/resting)
+3. **Wing blur**: `~~` → `~ ~` → `. .` → `/ \` (hover → slow → still → spread)
+4. **Body tilt**: horizontal = neutral; `\>` = celebrating/looping
+5. **Color hierarchy**: Beak (amber 208) → Eyes (white 15) → Body (green 78) → Wings (dim 245)
+6. **Throat patch**: magenta (201) on the body — the iridescent gorget
+7. **Tail**: forked or rounded, stabilizing the hover
+
+### 7.5. Bernard in Context
+
+**Sidebar replacement** (founder-mode):
+- Replaces the plain `◉` circle mark
+- Appears in the top-left of the sidebar, next to the HUMMBL wordmark
+- Idle hover state by default; switches to listening when user interacts
+
+**Bus messages**:
+- Bernard appears before CRAB in fleet compositions (he notices first)
+- Used as a visual prefix for belonging-aware messages: `>  STATUS`
+
+**Dashboard hero**:
+- Medium size Bernard hovers above the CRAB splash
+- Used in onboarding, first-launch, and ceremonial contexts
+
+**Receipt seal**:
+- Small Bernard appears in the corner of governance receipts
+- Signals "this was reviewed with care"
+
+---
+
+## 8. TUI Chrome System
+
+### 8.1. Primary Container (Double Border)
 
 For the main application window:
 
@@ -503,7 +609,7 @@ For the main application window:
 ╚══════════════════════════════════════════════════╝
 ```
 
-### 7.2. Secondary Container (Single Border)
+### 8.2. Secondary Container (Single Border)
 
 For panels, cards, and modals:
 
@@ -517,7 +623,7 @@ For panels, cards, and modals:
 └────────────────────────────────────┘
 ```
 
-### 7.3. Tertiary Container (Dashed Border)
+### 8.3. Tertiary Container (Dashed Border)
 
 For inactive or collapsed panels:
 
@@ -527,7 +633,7 @@ For inactive or collapsed panels:
 ╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
 ```
 
-### 7.4. Separator Rules
+### 8.4. Separator Rules
 
 ```
 Single: ────────────────────────────────────
@@ -536,7 +642,7 @@ Dashed: · · · · · · · · · · · · · · · · ·
 Dotted: ⁙ ⁙ ⁙ ⁙ ⁙ ⁙ ⁙ ⁙ ⁙ ⁙ ⁙ ⁙ ⁙ ⁙ ⁙ ⁙
 ```
 
-### 7.5. Header Pattern
+### 8.5. Header Pattern
 
 ```
 ╭─────── Agent Fleet ───────╮
@@ -556,7 +662,7 @@ Note: The emoji is optional. In strict ASCII mode, use Scut's small form:
 ╰───────────────────────────╯
 ```
 
-### 7.6. Receipt / Card Pattern
+### 8.6. Receipt / Card Pattern
 
 For individual bus messages, agent status cards, or audit entries:
 
@@ -572,7 +678,7 @@ For individual bus messages, agent status cards, or audit entries:
 └─────────────────────────────────────────────┘
 ```
 
-### 7.7. Status Pill Pattern
+### 8.7. Status Pill Pattern
 
 ```
 [NOMINAL]  [WARN]  [EMERGENCY]  [IDLE]  [BUSY]
@@ -586,7 +692,7 @@ Rendered with color:
 \033[48;5;160;38;5;15m EMERGENCY \033[0m
 ```
 
-### 7.8. Progress Bar
+### 8.8. Progress Bar
 
 ```
 Phase: CHECK  [████████████░░░░░░░░]  60%
@@ -599,9 +705,9 @@ Each phase is a lane. The bar fills as the agent completes its turn.
 
 ---
 
-## 8. The "Little Buddy" Feature Specification
+## 9. The "Little Buddy" Feature Specification
 
-### 8.1. Core Concept
+### 9.1. Core Concept
 
 The Little Buddy is a persistent, project-aware companion that lives in the terminal. It is not a chatbot. It is an **ambient intelligence** — it observes, learns, and surfaces observations at the right moment.
 
@@ -610,7 +716,7 @@ The Little Buddy is a persistent, project-aware companion that lives in the term
 - Clippy was generic. The Little Buddy learns your specific project patterns.
 - Clippy was a salesman. The Little Buddy is a coworker.
 
-### 8.2. Memory Model
+### 9.2. Memory Model
 
 The Little Buddy stores a `buddy-memory.jsonl` in the project root (not committed to git):
 
@@ -622,7 +728,7 @@ The Little Buddy stores a `buddy-memory.jsonl` in the project root (not committe
 
 This is the "tucked tail" — compressed, personal, ephemeral.
 
-### 8.3. Interaction Patterns
+### 9.3. Interaction Patterns
 
 **Observation (no action required):**
 ```
@@ -659,7 +765,7 @@ This is the "tucked tail" — compressed, personal, ephemeral.
    | | |
 ```
 
-### 8.4. Idle Animations
+### 9.4. Idle Animations
 
 When the terminal is idle (>30s), Scut performs small ambient animations:
 
@@ -676,9 +782,9 @@ These are non-distracting. They signal "the system is alive and watching."
 
 ---
 
-## 9. Application: Complete TUI Mockup
+## 10. Application: Complete TUI Mockup
 
-### 9.1. The Dashboard Header
+### 10.1. The Dashboard Header
 
 ```
 ╔══════════════════════════════════════════════════════════════════╗
@@ -688,7 +794,7 @@ These are non-distracting. They signal "the system is alive and watching."
 ╚══════════════════════════════════════════════════════════════════╝
 ```
 
-### 9.2. The Sidebar
+### 10.2. The Sidebar
 
 ```
 ╭── Navigation ───╮
@@ -708,7 +814,7 @@ These are non-distracting. They signal "the system is alive and watching."
 ╰─────────────────╯
 ```
 
-### 9.3. Agent Fleet Panel
+### 10.3. Agent Fleet Panel
 
 ```
 ┌─────────── Agent Fleet ────────────────────┐
@@ -724,7 +830,7 @@ These are non-distracting. They signal "the system is alive and watching."
 └────────────────────────────────────────────┘
 ```
 
-### 9.4. Bus Stream (Live Ticker)
+### 10.4. Bus Stream (Live Ticker)
 
 ```
 ╭── Coordination Bus (live) ──╮
@@ -736,7 +842,7 @@ These are non-distracting. They signal "the system is alive and watching."
 ╰─────────────────────────────╯
 ```
 
-### 9.5. Scut's Corner (Status + Buddy)
+### 10.5. Scut's Corner (Status + Buddy)
 
 ```
     ___
@@ -746,7 +852,7 @@ These are non-distracting. They signal "the system is alive and watching."
    | | |   [Scut remembers you like it quiet.]
 ```
 
-### 9.6. Full Dashboard Layout
+### 10.6. Full Dashboard Layout
 
 ```
 ╔══════════════════════════════════════════════════════════════════╗
@@ -777,11 +883,11 @@ These are non-distracting. They signal "the system is alive and watching."
 
 ---
 
-## 10. Sound & Motion (Textual)
+## 11. Sound & Motion (Textual)
 
 Terminal Core has no audio. All "sound" is rendered textually.
 
-### 10.1. Activity Indicators
+### 11.1. Activity Indicators
 
 ```
 [ Working ]     [ Working. ]     [ Working.. ]    [ Working... ]
@@ -795,7 +901,7 @@ Terminal Core has no audio. All "sound" is rendered textually.
   ●○○○○         ○●○○○         ○○●○○         ○○○●○         ○○○○●
 ```
 
-### 10.2. "Chime" Events
+### 11.2. "Chime" Events
 
 Instead of a beep, Terminal Core uses a visual chime — a brief flash of the status line:
 
@@ -805,15 +911,15 @@ Instead of a beep, Terminal Core uses a visual chime — a brief flash of the st
 
 This appears for 500ms then fades back to normal. It is the terminal equivalent of a notification sound.
 
-### 10.3. Scroll Behavior
+### 11.3. Scroll Behavior
 
 New bus messages do not jump-scroll. They push content up smoothly, one line at a time, like a teletype. The effect is achieved by printing a newline and the new message — no animation framework needed.
 
 ---
 
-## 11. Implementation Notes
+## 12. Implementation Notes
 
-### 11.1. Terminal Compatibility
+### 12.1. Terminal Compatibility
 
 | Feature | Requires | Fallback |
 |---------|----------|----------|
@@ -823,7 +929,7 @@ New bus messages do not jump-scroll. They push content up smoothly, one line at 
 | Emoji | Unicode 8.0+ | ASCII art Scut |
 | Double borders `╔╗` | Box drawing support | Single borders `┌┐` |
 
-### 11.2. Python Rendering
+### 12.2. Python Rendering
 
 ```python
 # Color helper
@@ -850,7 +956,7 @@ def render_card(title: str, body: str, width: int = 40) -> str:
     return "\n".join([top, mid, sep, body, bottom])
 ```
 
-### 11.3. Accessibility
+### 12.3. Accessibility
 
 - All color pairs meet WCAG contrast when rendered on true black
 - Scut's expressions are described in alt-text when used in documentation
@@ -859,19 +965,20 @@ def render_card(title: str, body: str, width: int = 40) -> str:
 
 ---
 
-## 12. Receipt
+## 13. Receipt
 
-- **Brand system document:** this file (v1.1)
+- **Brand system document:** this file (v1.2)
 - **Aesthetic name:** Neo-ANSI Revival
 - **Primary mascot:** CANONICAL CRAB — biologically accurate decapod with claws, stalk eyes, 10 legs (4 sizes)
 - **Secondary mascot:** SCUT, The Crab's Friend — tiny cyan companion, 1:2 scale relationship to Canonical Crab, appears in status bars + notifications
-- **Logo:** Hexapod Shell mark (3 sizes) + Canonical Crab mark (4 sizes)
+- **HUMMBL mascot:** BERNARD — iridescent green hummingbird, 6 expressions, replaces `◉` in sidebar
+- **Logo:** Hexapod Shell mark (3 sizes) + Canonical Crab mark (4 sizes) + Bernard mark (3 sizes)
 - **Palette:** 11-color ANSI system with 16-color fallback
 - **Chrome:** 4 border weights, 4 separator styles
 - **Feature spec:** Little Buddy ambient intelligence
 - **Design system:** Warm Brutalism — Anthropic warmth rendered through VT100 honesty
 - **Historical lineage:** 130 years of character-density art (1898 → 2026)
-- **Anatomy rule:** Claws > Eyes > Legs > Mouth (visual hierarchy, all canonical crabs)
+- **Anatomy rules:** Claws > Eyes > Legs > Mouth (crabs); Beak > Eyes > Body > Wings (Bernard)
 
 ---
 
