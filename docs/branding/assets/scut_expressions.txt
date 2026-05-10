@@ -1,5 +1,10 @@
-SCUT — ASCII Art Expression Sheet
+SCUT — The Crab's Friend | ASCII Art Expression Sheet
 CRAB Brand System | Terminal Core Aesthetic
+Scut is a tiny crablet companion to the Canonical CRAB.
+He rides on the big crab's shell, scuttles alongside, or appears
+alone in status bars, receipts, and UI nudges.
+
+Colors: Cyan (81) body, White (15) eyes/mouth, Amber (208) when excited.
 Render with: cat scut_expressions.txt
 
 ================================================================================

@@ -1,10 +1,11 @@
 # CRAB Brand System: Terminal Core & Low-Fi Digital
 ## Neo-Retro Identity for a Terminal-Native Multi-Agent Protocol
 
-**Status:** Draft v0.1 | **Date:** 2026-05-10  
-**Aesthetic:** Inverse Corporate Memphis. Authentic nostalgia. Warm brutalism.  
+**Status:** Draft v1.1 | **Date:** 2026-05-10  
+**Aesthetic:** Neo-ANSI Revival. Inverse Corporate Memphis. Warm brutalism.  
 **Medium:** Terminals, TUIs, ASCII/ANSI art, character-based graphics  
-**Mascot:** SCUT (Shell-Compressed Utility Terminal)
+**Mark:** Canonical CRAB (armored, decapod, governance-facing)  
+**Mascot:** SCUT — The Crab's Friend (cyan crablet companion)
 
 ---
 
@@ -15,6 +16,32 @@
 We are not "retro-inspired." We are retro-*native*. CRAB was not designed to look old; it was designed for a world that never stopped being terminal-first. The aesthetic is not a coat of paint on a modern framework — it is the framework.
 
 The design borrows from Anthropic's warmth and intentionality (generous spacing, human tone, serif wordmarks) but renders it through the brutal honesty of a VT100. The result is what we call **"Warm Brutalism"** — caring but unvarnished. Beautiful but unafraid of ASCII.
+
+### The Lineage: 130 Years of Character-Density Art
+
+We are not inventing an aesthetic. We are **reviving a craft**. Terminal Core inherits from:
+
+```
+1898: Flora Stacey — typewriter butterfly (overstrike density)
+   ↓
+1960s: Bell Labs — line printer portraits (character darkness as pixel)
+   ↓
+1963: ASCII standard — 128-character lingua franca
+   ↓
+1980s: Commodore Amiga "NFO" thin-line style
+   ↓
+1980s-90s: BBS ANSI Scene — ACiD, iCE, 16colo.rs (extended chars + 16-color)
+   ↓
+2010s-present: Neo-ANSI Revival — Claude Code, Sanctum, CRAB, HUMMBL
+```
+
+**Key conventions adopted from the ANSI Scene:**
+- **Artpack structure**: FILE_ID.DIZ (45×22 ASCII), .ANS art, .NFO infofile, SAUCE metadata → HUMMBL versioned branding releases
+- **Font spacing**: 9px for line chars (8th col duplicated to prevent gaps) → our box-drawing follows this convention
+- **iCE colors**: 16 fg + 8 bg (darker only) → we use 256-color with 16-color fallback
+- **Average art size**: ~127 lines per artwork → our mascots fit in 5-20 lines by TUI constraint
+
+**Why this matters**: In an age of AI-generated "perfection," raw pixels and text-based art feel more real and grounded. The CRAB mark is not a vector SVG — it is a set of characters you could type yourself.
 
 ### Positioning Statement
 
@@ -191,44 +218,97 @@ This is the "literary warmth" borrowed from Anthropic. A brand that deals in lan
 
 ## 5. Logo System
 
-### 5.1. Primary Mark: The Hexapod Shell
+### 5.1. Primary Mark: The Canonical CRAB
 
-A hexagon that reads as both a "C" (for CRAB) and a crab carapace. Works at any scale.
+The canonical CRAB is designed to be **unmistakably a crab** — not an abstract hexagon, not a generic blob. It inherits from the ANSI art tradition (ascii.co.uk, Hayley Jane Wakenshaw's crustaceans, ACiD/iCE artpack conventions) but is compositional and armored. It is a **governance crab**: predatory, watchful, ten-legged.
 
-**Small (8x6, favicon-equivalent):**
+**Anatomy rules:**
+- **Claws** (`\ /` or raised `V`) are the dominant feature — raised, ready, often asymmetrical
+- **Eyes on stalks** (`.--(o o)--.`) — not embedded; they *watch*
+- **Carapace** with a ridge and wave texture (`~`) — shield-shaped, armored
+- **Ten legs** splayed outward (decapod = biologically accurate) — `| |` verticals encode stability
+- **Mouth ventral** (`>`) — small, task-focused, not a smile
 
-```
-   ╭──╮
-  ╱ ◠◠ ╲
- │  ⏝  │
-  ╰────╯
-```
-
-**Medium (16x9, TUI header icon):**
+**Tiny (3 lines, inline icon):**
 
 ```
-      ╭────────╮
-     ╱    ◠◠    ╲
-    │  ╱──────╲  │
-    │ │   CRAB  │ │
-     ╲ ╰──────╯ ╱
-      ╰────────╯
+  \   /
+ <o_o>
+  / \
 ```
 
-**Large (32x12, splash screen):**
+**Small (8 lines, favicon-equivalent):**
 
 ```
-           ╭──────────────────╮
-          ╱                    ╲
-         │     ◠◠      ◠◠      │
-         │    ╱  ╲    ╱  ╲     │
-         │   │ <> │  │ <> │    │
-          ╲   ╲──╱    ╲──╱    ╱
-           ╲    ╲──────╱      ╱
-            ╰────────────────╯
+       \   /
+        )_(
+    .--(o o)--.
+   /  .-----.  \
+  (     >     )
+   \  /| |\  /
+    | | | | |
+    |_| |_|_|
 ```
 
-### 5.2. Logotype: The Receipt
+**Medium (14 lines, TUI header):**
+
+```
+        \     /
+         )___(
+      .--(o o)--.
+     /  .-----.  \
+    /  / ~   ~ \  \
+   (  |    >    |  )
+    \  \_______/  /
+     '--'|   |'--'
+         | | |
+        /| | |\
+       / | | | \
+      (  | | |  )
+       \ | | | /
+        \|_|_|_/
+```
+
+**Large (19 lines, ceremonial splash):**
+
+```
+                \         /
+                 )_______(
+              .==( o     o )==.
+             /  .-----------.  \
+            /  /  ~   .   ~  \  \
+           /  (    -------    )  \
+          (    |    \ > /    |    )
+           \    \    ===    /    /
+            \    |   CRAB   |    /
+             '--'|\       /|'--'
+                |  \     /  |
+                |   |   |   |
+                |   |   |   |
+               /    |   |    \
+              /     |   |     \
+             (      |   |      )
+              \     |   |     /
+               \    |   |    /
+                |___|   |___|
+```
+
+### 5.2. Wordmark
+
+Block letters with the crab silhouette as a sigil:
+
+```
+   \   /
+    )_(
+ .-(o o)-.   ██████╗██████╗  █████╗ ██████╗
+(    >    ) ██╔════╝██╔══██╗██╔══██╗██╔══██╗
+ \_______/  ██║     ██████╔╝███████║██████╔╝
+   | | |     ██║     ██╔══██╗██╔══██║██╔══██╗
+   | | |     ╚██████╗██║  ██║██║  ██║██████╔╝
+   |_|_|      ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝
+```
+
+### 5.3. Logotype: The Receipt
 
 A horizontal mark that looks like a printed receipt — appropriate for a protocol about receipts:
 
@@ -244,30 +324,35 @@ A horizontal mark that looks like a printed receipt — appropriate for a protoc
 └──────────────────────────────────────┘
 ```
 
-### 5.3. The Seal
+### 5.4. The Seal
 
 For use in documentation, footers, and certification:
 
 ```
       ╭─────────────╮
-     │   ┌─────┐   │
-     │   │ ◠◠ │   │
-     │   │  ⏝  │   │
-     │   └──┬──┘   │
-     │  CRAB 1.0  │
+     │   \     /   │
+     │    )_(      │
+     │ .-(o o)-.   │
+     │(    >    )  │
       ╰─────────────╯
 ```
 
 ---
 
-## 6. Mascot: SCUT
+## 6. Mascot: SCUT — The Crab's Friend
 
 ### 6.1. Who Is Scut?
 
-Scut is a small crab-like utility creature who lives in your terminal. He is not an AI. He is a companion — a "little buddy" who observes, remembers, and occasionally interjects with observations that are useful but never intrusive.
+Scut is **the Crab's friend** — a tiny crablet companion to the Canonical CRAB. He is not the logo; he is the "little buddy" who rides on the big crab's shell, scuttles alongside, or appears alone in status bars and receipts. Where the Canonical CRAB is armored, predatory, and governance-facing, Scut is small, curious, and user-facing.
+
+**Relationship to the Canonical CRAB:**
+- Scut mirrors the big crab's emotional state at 1:2 scale
+- He rides on the shell during ceremonies, scuttles alongside during work
+- When the big crab is not present (small UIs, status bars), Scut appears alone
+- Scut is **cyan (81)** — secondary, supportive — while the big crab is **amber (208)** — primary, authoritative
 
 **Design principles:**
-- Small enough to fit in a 6-line terminal status area
+- Small enough to fit in a 5-line terminal status area
 - Expressive through simple line changes (eyes, claws, posture)
 - Can hold or interact with terminal elements (cursors, scrollbars, receipt icons)
 - Wears a tiny hard hat when performing maintenance
@@ -776,13 +861,17 @@ def render_card(title: str, body: str, width: int = 40) -> str:
 
 ## 12. Receipt
 
-- **Brand system document:** this file
-- **Mascot:** SCUT, 6-line ASCII crab companion
-- **Logo:** Hexapod Shell mark (3 sizes)
+- **Brand system document:** this file (v1.1)
+- **Aesthetic name:** Neo-ANSI Revival
+- **Primary mascot:** CANONICAL CRAB — biologically accurate decapod with claws, stalk eyes, 10 legs (4 sizes)
+- **Secondary mascot:** SCUT, The Crab's Friend — tiny cyan companion, 1:2 scale relationship to Canonical Crab, appears in status bars + notifications
+- **Logo:** Hexapod Shell mark (3 sizes) + Canonical Crab mark (4 sizes)
 - **Palette:** 11-color ANSI system with 16-color fallback
 - **Chrome:** 4 border weights, 4 separator styles
 - **Feature spec:** Little Buddy ambient intelligence
-- **Next gate:** Implement Scut in the dashboard sidebar + bus notifications
+- **Design system:** Warm Brutalism — Anthropic warmth rendered through VT100 honesty
+- **Historical lineage:** 130 years of character-density art (1898 → 2026)
+- **Anatomy rule:** Claws > Eyes > Legs > Mouth (visual hierarchy, all canonical crabs)
 
 ---
 
