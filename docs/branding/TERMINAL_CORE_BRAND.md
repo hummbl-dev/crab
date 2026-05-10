@@ -1,11 +1,12 @@
 # CRAB Brand System: Terminal Core & Low-Fi Digital
 ## Neo-Retro Identity for a Terminal-Native Multi-Agent Protocol
 
-**Status:** Draft v1.1 | **Date:** 2026-05-10  
+**Status:** Draft v1.2 | **Date:** 2026-05-10  
 **Aesthetic:** Neo-ANSI Revival. Inverse Corporate Memphis. Warm brutalism.  
 **Medium:** Terminals, TUIs, ASCII/ANSI art, character-based graphics  
 **Mark:** Canonical CRAB (armored, decapod, governance-facing)  
-**Mascot:** SCUT — The Crab's Friend (cyan crablet companion)
+**Mascot:** SCUT — The Crab's Friend (cyan crablet companion)  
+**HUMMBL Mark:** BERNARD — The Hummingbird (iridescent green, belonging-aware)
 
 ---
 
