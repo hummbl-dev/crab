@@ -181,10 +181,98 @@ Other products spread if they:
 
 ---
 
+## 6. License Decision — Operator Choice Required
+
+CRAB OSS needs a license before public release. Here are the viable options:
+
+| License | Permissiveness | Patent Protection | Commercial Use | Best For |
+|---------|---------------|-------------------|----------------|----------|
+| **MIT** | Maximum | None | Unlimited | Fastest adoption, widest distribution |
+| **Apache-2.0** | High | Yes (explicit patent grant) | Unlimited | Corporate adoption (legal departments prefer patent clauses) |
+| **PolyForm Noncommercial 1.0.0** | Restricted | None | Prohibited without separate agreement | Delayed monetization — keeps commercial rights reserved |
+| **AGPL-3.0** | Copyleft | Yes | Allowed, but modifications must be shared | If you want to force contributions back (risk: scares companies away) |
+
+### Recommendation: Apache-2.0
+
+**Rationale:**
+- CRAB is a *protocol* — protocols need network effects to be valuable
+- Apache-2.0 provides the patent protection that enterprise legal teams require
+- It's permissive enough for startups, big tech, and individual developers
+- It does NOT force contributors to share modifications (unlike GPL/AGPL)
+- It aligns with how other coordination protocols have succeeded (e.g., NATS, etcd, Kubernetes are all Apache-2.0)
+
+**If you choose PolyForm Noncommercial:** You retain the right to sell commercial licenses later, but you sacrifice network effects now. This only makes sense if you have a specific commercial licensing strategy ready.
+
+**If you choose MIT:** Simpler, but you lose patent protection. Fine for a hobby project; risky for something you might patent-protect later.
+
+**Decision needed:** Pick one and add a `LICENSE` file before v1.0 tag.
+
+---
+
+## 7. Public Release Timeline — Three Options
+
+### Option A: Ship This Week (Minimal Viable Release)
+**What ships:** `crab_daemon.py`, `tests/`, `README.md`, `AUDIT.md`, `LICENSE`
+**What doesn't:** Website, examples, blog post, community docs
+**Pros:** Fastest feedback loop, lowest overhead
+**Cons:** First impression is thin; harder to build momentum
+**Effort:** 2-4 hours (add LICENSE, cut v1.0 tag, write release notes)
+
+### Option B: Two-Week Sprint (Recommended)
+**What ships:** Everything in Option A + website landing page + 3 examples + `CONTRIBUTING.md` + `CODE_OF_CONDUCT.md`
+**What doesn't:** Full docs site, video demo, conference talk
+**Pros:** Professional enough for HN/Reddit launch, examples prove value
+**Cons:** 2 weeks of focused work
+**Effort:** ~16 hours spread over 2 weeks
+
+### Option C: One-Month Runway (Maximum Polish)
+**What ships:** Everything in Option B + full docs site (MkDocs) + video demo + launch blog post + first community call
+**Pros:** Best chance of sustained adoption, press coverage, conference CFP submissions
+**Cons:** Longest time to market, highest opportunity cost
+**Effort:** ~40 hours over 4 weeks
+
+### Recommended: Option B (Two-Week Sprint)
+
+The portable daemon is clean, audited, and tested. The risk of waiting is higher than the risk of shipping thin. A two-week sprint gives you:
+- A landing page that explains CRAB in 60 seconds
+- 3 working examples (Python script, shell script, Docker compose)
+- A contribution guide that signals you're open to external contributors
+- A v1.0 tag that signals stability
+
+**Sprint breakdown:**
+
+| Day | Task |
+|-----|------|
+| 1-2 | Add LICENSE, CONTRIBUTING.md, CODE_OF_CONDUCT.md |
+| 3-4 | Build landing page (single HTML, no framework, hosted on GitHub Pages) |
+| 5-6 | Write 3 examples: basic Python, bus backend plugin, Docker compose |
+| 7-8 | Write "Getting Started" guide + API reference |
+| 9-10 | Cut v1.0.0 tag, write release notes, post to HN / r/selfhosted / relevant Discords |
+| 11-14 | Respond to feedback, fix issues, update docs |
+
+---
+
+## 8. Tier 2 Priority — After CRAB OSS Ships
+
+Once CRAB OSS v1.0 is live, the next extraction target depends on what feedback you get:
+
+| If users ask for... | Extract first |
+|---------------------|---------------|
+| "How do I visualize my agent mesh?" | **CRAB Dashboard** (generic form) |
+| "How do I track costs across agents?" | **Cost Governor** |
+| "How do I validate bus messages?" | **Schema Validator** (low-hanging fruit) |
+| "How do I authenticate agents?" | **Agent Identity Registry** |
+| "How do I generate daily briefings?" | **Briefing Engine** (hardest, save for last) |
+
+**My recommendation:** Start with **Schema Validator** (1 week effort, already portable) while gauging demand for the others. It gives you a quick win and proves the extraction pipeline works.
+
+---
+
 ## Receipt
 
 - Brainstorm artifact: this file
 - Audit: `AUDIT.md` (10/10 PASS)
 - Portable daemon: `crab_daemon.py` + `tests/test_daemon.py`
-- Issue tracking: GitHub Issue #1 in `hummbl-dev/crab`
-- Next gate: Operator review of this plan
+- Issue tracking: GitHub Issue #1 + #2 in `hummbl-dev/crab`
+- Peer review: Issue #2 awaiting external sign-off
+- **Next gate: Operator picks license + timeline (Section 6 & 7)**
