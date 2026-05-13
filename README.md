@@ -8,7 +8,7 @@
 
 CRAB is a lightweight coordination protocol for multi-agent systems:
 
-> **Check → Reason → Act → Bus**
+> **CRAWL/Check → Reason → Act → Bus**
 
 Every autonomous turn reads live state, decides whether to act, performs the work, and posts a receipt to a coordination bus. No more waking up wondering what your agents did overnight.
 
@@ -28,7 +28,7 @@ CRAB makes every agent turn **observable** and **accountable**. The bus receipt 
 
 ## Features
 
-- **4-step protocol** — Check, Reason, Act, Bus. Structured, repeatable, safe.
+- **4-step protocol** — CRAWL/Check, Reason, Act, Bus. Structured, repeatable, safe.
 - **Pluggable bus backends** — TSV, JSONL, stdout, or custom callback. One-line switch.
 - **Multi-lane work streams** — Independent lanes with separate schedules and stop conditions.
 - **Zero dependencies** — Python 3.8+ stdlib only. No `pip install`.
@@ -177,8 +177,8 @@ daemon.stop()
 ┌─────────────────────────────────────┐
 │           CrabDaemon                │
 │  ┌─────┐ ┌──────┐ ┌───┐ ┌─────┐   │
-│  │Check│→│Reason│→│Act│→│ Bus │   │
-│  └─────┘ └──────┘ └───┘ └─────┘   │
+│  │CRAWL│→│Reason│→│Act│→│ Bus │   │
+│  │Check│ └──────┘ └───┘ └─────┘   │
 │       ↑___________________↓        │
 │         (receipt posted)            │
 └─────────────────────────────────────┘
@@ -197,7 +197,7 @@ python -m pytest tests/ -v
 
 18 tests covering:
 - Config serialization/deserialization
-- Check phase (git state, bus tail, blockers)
+- CRAWL/Check phase (live state, git state, bus tail, blockers)
 - Reason phase (stop conditions, lane selection)
 - Act phase (cleanup, audit, error handling)
 - Bus phase (all four backends)
@@ -210,6 +210,7 @@ python -m pytest tests/ -v
 - [Adoption Checklist](docs/adoption-checklist.md) — practical rollout checklist
 - [Message Types](docs/message-types.md) — bus message taxonomy
 - [Source Notes](docs/source-notes.md) — origin and relation to HUMMBL founder-mode
+- [Release Notes](docs/RELEASE_NOTES.md) — draft/stable protocol status
 - [Security Audit](AUDIT.md) — redteam audit results (10/10 PASS)
 - [Productization Plan](PRODUCTIZATION.md) — roadmap from internal ops to marketable product
 
@@ -229,7 +230,7 @@ Apache-2.0. See [LICENSE](LICENSE).
 
 ## Status
 
-- **Protocol**: v1.0 — stable, used in production at HUMMBL since 2026-04
+- **Protocol**: v1.1 draft — CRAWL/Check wording proposed for docs-first adoption; v1.0 Check terminology remains compatible
 - **Daemon**: v1.0 — reference implementation, tested, audited
 - **Security**: [Redteam audit](AUDIT.md) — 10/10 PASS
 

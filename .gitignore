@@ -7,5 +7,6 @@ Thumbs.db
 __pycache__/
 
 # CRAB runtime artifacts
-bus/
+bus/messages.tsv
+bus/*.jsonl
 crab-daemon/

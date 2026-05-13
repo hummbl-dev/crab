@@ -12,13 +12,17 @@ Use this checklist when introducing CRAB to a repo, team, or agent fleet.
 - [ ] Define protected surfaces.
 - [ ] Define who has approval and merge authority.
 
-## Check
+## CRAWL / Check
 
 - [ ] Document the branch/status command.
 - [ ] Document the dirty-worktree command.
 - [ ] Document the stash or lock command.
 - [ ] Document the bus-tail command.
 - [ ] Document stop conditions.
+- [ ] Document when git-only CRAWL is valid because no shared coordination surface exists.
+- [ ] Document allowed live-state sources for Context, Repo, Agents, Wire, and Limits.
+- [ ] Document which probes require credentials, SSH, privileged access, or human approval.
+- [ ] Document whether the current surface is bus-required or local-only eligible.
 
 ## Reason
 
@@ -45,4 +49,3 @@ Use this checklist when introducing CRAB to a repo, team, or agent fleet.
 - [ ] Add CRAB to PR or handoff templates where useful.
 - [ ] Run one AAR after the first real incident or missed check.
 - [ ] Promote durable lessons back into the local implementation guide.
-

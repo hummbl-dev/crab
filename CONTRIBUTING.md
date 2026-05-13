@@ -44,6 +44,27 @@ No `pip install -e .` or external dependencies needed.
 
 Types: `feat`, `fix`, `docs`, `test`, `refactor`, `perf`, `chore`
 
+### Batch enhancement commits
+
+When committing doc-enhance sweep batches, use the `crab(doc-enhance):` scope:
+
+```
+crab(doc-enhance): batch N — X T< tier > research docs
+
+Enhanced X Tier-<tier> research documents with structured frontmatter,
+evidence grades, confidence scores, DOI audit notes, bibliography
+placeholders, and gaps/next-steps checklists.
+
+Generated with [Devin](https://cli.devin.ai/docs)
+
+Co-Authored-By: Devin <158243242+devin-ai-integration[bot]@users.noreply.github.com>
+```
+
+Example:
+```
+crab(doc-enhance): batch 14 — 20 T2 research docs
+```
+
 Example:
 ```
 feat: add HTTP bus backend for webhook-style integration

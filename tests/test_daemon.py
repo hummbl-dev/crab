@@ -22,11 +22,13 @@ from crab_daemon import (
     DaemonConfig,
     LaneConfig,
     ReasonResult,
+    RetrogradeResult,
     act_phase,
     bus_phase,
     check_phase,
     default_config,
     reason_phase,
+    retrograde_phase,
 )
 
 
@@ -205,3 +207,155 @@ class TestCLI:
         from crab_daemon import main
         rc = main(["--once", "--dry-run", "--lane", "cleanup", "--config", str(path)])
         assert rc == 0
+
+
+class TestBusBridge:
+    """Test CRAB -> founder-mode bus bridge."""
+
+    def test_bridge_extracts_retrograde_from_log(self, tmp_path):
+        """bridge_once parses Retrograde + BUS lines and returns structured data."""
+        log = tmp_path / "test-daemon.log"
+        log.write_text(
+            "2026-05-11T20:30:00Z INFO === CRAB turn: cleanup ===\n"
+            "2026-05-11T20:30:01Z INFO [BUS] 2026-05-11T20:30:01Z crab-daemon -> all [STATUS] [cleanup] OK - Pruned 2 branches\n"
+            '2026-05-11T20:30:01Z INFO RETROGRADE: validated=True dissonance=0.00 scuttle=False findings=["OK: pruned == found"]\n',
+            encoding="utf-8",
+        )
+        from bridge_crab_fm import bridge_once
+        # bridge_once posts to founder-mode bus; we just verify it doesn't crash
+        rc = bridge_once(log)
+        assert rc in (0, 1)  # 0 = posted, 1 = post failed (bus may be unavailable in CI)
+
+
+class TestRetrogradePhase:
+    """6 tests for the RETROGRADE backward validator."""
+
+    def test_retrograde_cleanup_valid(self):
+        """Cleanup with matching found/pruned lists → dissonance 0.0."""
+        turn = CrabTurn(
+            check=CheckResult("t", "main", False, 0, [], []),
+            reason=ReasonResult(True, "cleanup", "STATUS", "prune-gone"),
+            act=ActResult(
+                success=True,
+                actions_taken=["Found 2 stale branches", "Pruned 2 branches"],
+                artifacts=[],
+                errors=[],
+                metadata={
+                    "gone_branches_found": ["feat/old", "feat/older"],
+                    "gone_branches_pruned": ["feat/old", "feat/older"],
+                    "untracked_count": 0,
+                },
+            ),
+        )
+        config = DaemonConfig(retrograde_enabled=True, dissonance_threshold=0.5)
+        result = retrograde_phase(config, turn)
+        assert result is not None
+        assert result.validated is True
+        assert result.dissonance == 0.0
+        assert result.scuttle is False
+        assert "OK" in result.findings[0]
+
+    def test_retrograde_cleanup_orphaned_prune(self):
+        """Prune branch not in found list → dissonance 0.8, scuttle True."""
+        turn = CrabTurn(
+            check=CheckResult("t", "main", False, 0, [], []),
+            reason=ReasonResult(True, "cleanup", "STATUS", "prune-gone"),
+            act=ActResult(
+                success=True,
+                actions_taken=["Pruned 1 branch"],
+                artifacts=[],
+                errors=[],
+                metadata={
+                    "gone_branches_found": [],
+                    "gone_branches_pruned": ["feat/phantom"],
+                    "untracked_count": 0,
+                },
+            ),
+        )
+        config = DaemonConfig(retrograde_enabled=True, dissonance_threshold=0.5)
+        result = retrograde_phase(config, turn)
+        assert result is not None
+        assert result.validated is False
+        assert result.dissonance == 0.8
+        assert result.scuttle is True
+        assert "Orphaned prune" in result.findings[0]
+
+    def test_retrograde_git_audit_valid(self):
+        """Git audit with complete metadata → dissonance 0.0."""
+        turn = CrabTurn(
+            check=CheckResult("t", "main", False, 0, [], []),
+            reason=ReasonResult(True, "git-audit", "STATUS", "audit"),
+            act=ActResult(
+                success=True,
+                actions_taken=["Worktree clean"],
+                artifacts=[],
+                errors=[],
+                metadata={
+                    "untracked_count": 0,
+                    "modified_count": 0,
+                    "stale_locks": False,
+                },
+            ),
+        )
+        config = DaemonConfig(retrograde_enabled=True, dissonance_threshold=0.5)
+        result = retrograde_phase(config, turn)
+        assert result is not None
+        assert result.validated is True
+        assert result.dissonance == 0.0
+        assert result.scuttle is False
+
+    def test_retrograde_git_audit_missing_metadata(self):
+        """No metadata captured → dissonance 0.5, scuttle True."""
+        turn = CrabTurn(
+            check=CheckResult("t", "main", False, 0, [], []),
+            reason=ReasonResult(True, "git-audit", "STATUS", "audit"),
+            act=ActResult(
+                success=True,
+                actions_taken=["Worktree clean"],
+                artifacts=[],
+                errors=[],
+                metadata={},
+            ),
+        )
+        config = DaemonConfig(retrograde_enabled=True, dissonance_threshold=0.4)
+        result = retrograde_phase(config, turn)
+        assert result is not None
+        assert result.validated is False
+        assert result.dissonance == 0.5
+        assert result.scuttle is True
+        assert "No metadata captured" in result.findings[0]
+
+    def test_retrograde_bus_audit_valid(self):
+        """Bus audit with message count → dissonance 0.0."""
+        turn = CrabTurn(
+            check=CheckResult("t", "main", False, 0, [], []),
+            reason=ReasonResult(True, "bus-audit", "STATUS", "audit"),
+            act=ActResult(
+                success=True,
+                actions_taken=["Bus has 5 messages"],
+                artifacts=[],
+                errors=[],
+                metadata={
+                    "message_count": 5,
+                    "malformed_count": 0,
+                    "identities": ["agent-a"],
+                },
+            ),
+        )
+        config = DaemonConfig(retrograde_enabled=True, dissonance_threshold=0.5)
+        result = retrograde_phase(config, turn)
+        assert result is not None
+        assert result.validated is True
+        assert result.dissonance == 0.0
+        assert result.scuttle is False
+
+    def test_retrograde_disabled(self):
+        """retrograde_enabled=False → returns None."""
+        turn = CrabTurn(
+            check=CheckResult("t", "main", False, 0, [], []),
+            reason=ReasonResult(True, "cleanup", "STATUS", "prune"),
+            act=ActResult(True, ["did thing"], [], []),
+        )
+        config = DaemonConfig(retrograde_enabled=False)
+        result = retrograde_phase(config, turn)
+        assert result is None

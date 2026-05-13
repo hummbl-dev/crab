@@ -17,8 +17,12 @@ This module has zero third-party dependencies. It uses only Python stdlib.
 """
 
 import os
+import re
 import sys
 import time
+
+# ANSI escape sequence pattern for stripping
+_ANSI_RE = re.compile(r"\x1b\[[0-9;]*m")
 
 # Force UTF-8 output on Windows and other platforms with narrow default encodings
 if hasattr(sys.stdout, "reconfigure"):
@@ -86,6 +90,9 @@ class TerminalCore:
         out = []
         out.append(f"{bc}{b['tl']}{b['h'] * (width - 2)}{b['tr']}{self.RESET}")
 
+        def _vis(text: str) -> int:
+            return len(_ANSI_RE.sub("", text))
+
         if title:
             pad = width - len(title) - 4
             tline = f"{b['v']} {self._c(self.WHITE, self.BOLD + title)}{' ' * pad} {b['v']}"
@@ -94,7 +101,7 @@ class TerminalCore:
             out.append(self._c(bc, s))
 
         for line in lines:
-            visible_len = len(line.replace("\033[", "\x01\033").split("m")[-1] if "\033[" in line else line)
+            visible_len = _vis(line)
             pad = max(0, width - visible_len - 4)
             l = f"{b['v']} {line}{' ' * pad} {b['v']}"
             out.append(self._c(bc, l))
@@ -179,13 +186,13 @@ class TerminalCore:
             return "\n".join([
                 self._c(self.AMBER, "  ___"),
                 self._c(self.AMBER, " /") + self._c(self.WHITE, "oo") + self._c(self.AMBER, "\\"),
-                self._c(self.AMBER, "( ") + self._c(self.WHITE, ">") + self._c(self.AMBER, "  )"),
+                self._c(self.AMBER, "(    )"),
                 self._c(self.AMBER, " \\___/"),
             ])
         return "\n".join([
             self._c(self.AMBER, "  ___"),
             self._c(self.AMBER, " /") + self._c(self.WHITE, "\u25e0\u25e0") + self._c(self.AMBER, "\\"),
-            self._c(self.AMBER, "( ") + self._c(self.WHITE, ">") + self._c(self.AMBER, "  )"),
+            self._c(self.AMBER, "(    )"),
             self._c(self.AMBER, " \\___/"),
         ])
 
@@ -196,7 +203,7 @@ class TerminalCore:
                 self._c(self.AMBER, "          /                    \\"),
                 self._c(self.AMBER, "         |   ") + self._c(self.WHITE, "oo") + self._c(self.AMBER, "      ") + self._c(self.WHITE, "oo") + self._c(self.AMBER, "      |"),
                 self._c(self.AMBER, "         |  ") + self._c(self.WHITE, "/  \\") + self._c(self.AMBER, "    ") + self._c(self.WHITE, "/  \\") + self._c(self.AMBER, "     |"),
-                self._c(self.AMBER, "         | ") + self._c(self.WHITE, "| <> |  | <> |") + self._c(self.AMBER, "    |"),
+                self._c(self.AMBER, "         | ") + self._c(self.WHITE, "|    |  |    |") + self._c(self.AMBER, "    |"),
                 self._c(self.AMBER, "          \\  ") + self._c(self.WHITE, "\\--/    \\--/") + self._c(self.AMBER, "    /"),
                 self._c(self.AMBER, "           \\    ") + self._c(self.WHITE, "\\------/") + self._c(self.AMBER, "      /"),
                 self._c(self.AMBER, "            +----------------+"),
@@ -216,7 +223,7 @@ class TerminalCore:
             self._c(self.AMBER, "          \u2571                    \u2572"),
             self._c(self.AMBER, "         \u2502   ") + self._c(self.WHITE, "\u25e0\u25e0") + self._c(self.AMBER, "      ") + self._c(self.WHITE, "\u25e0\u25e0") + self._c(self.AMBER, "      \u2502"),
             self._c(self.AMBER, "         \u2502  ") + self._c(self.WHITE, "/  \\") + self._c(self.AMBER, "    ") + self._c(self.WHITE, "/  \\") + self._c(self.AMBER, "     \u2502"),
-            self._c(self.AMBER, "         \u2502 ") + self._c(self.WHITE, "\u2502 <> \u2502  \u2502 <> \u2502") + self._c(self.AMBER, "    \u2502"),
+            self._c(self.AMBER, "         \u2502 ") + self._c(self.WHITE, "\u2502    \u2502  \u2502    \u2502") + self._c(self.AMBER, "    \u2502"),
             self._c(self.AMBER, "          \u2572  ") + self._c(self.WHITE, "\\\u2500\u2500\u257f    \\\u2500\u2500\u257f") + self._c(self.AMBER, "    \u2571"),
             self._c(self.AMBER, "           \u2572    ") + self._c(self.WHITE, "\\\u2500\u2500\u2500\u2500\u2500\u2571") + self._c(self.AMBER, "      \u2571"),
             self._c(self.AMBER, "            \u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f"),
@@ -233,14 +240,25 @@ class TerminalCore:
         ])
 
 
-def demo_splash(tc: TerminalCore):
+def _wait(tc: TerminalCore, auto: bool = False):
+    """Wait for Enter or auto-advance in non-interactive environments."""
+    if auto:
+        time.sleep(0.3)
+        return
+    try:
+        input()
+    except EOFError:
+        time.sleep(0.3)
+
+
+def demo_splash(tc: TerminalCore, auto: bool = False):
     print(tc._c(tc.BG_BLACK, "") + tc.logo_splash())
     print()
     print(tc._c(tc.DIM, "    Press Enter to continue..."))
-    input()
+    _wait(tc, auto)
 
 
-def demo_scut(tc: TerminalCore):
+def demo_scut(tc: TerminalCore, auto: bool = False):
     print(tc._c(tc.BG_BLACK, ""))
     print(tc._c(tc.WHITE, "=== SCUT EXPRESSIONS ==="))
     print()
@@ -248,10 +266,10 @@ def demo_scut(tc: TerminalCore):
         print(tc.scut(expr))
         print()
     print(tc._c(tc.DIM, "Press Enter to continue..."))
-    input()
+    _wait(tc, auto)
 
 
-def demo_chrome(tc: TerminalCore):
+def demo_chrome(tc: TerminalCore, auto: bool = False):
     print(tc._c(tc.BG_BLACK, ""))
     print(tc._c(tc.WHITE, "=== TUI CHROME ==="))
     print()
@@ -306,10 +324,10 @@ def demo_chrome(tc: TerminalCore):
     print()
 
     print(tc._c(tc.DIM, "Press Enter to continue..."))
-    input()
+    _wait(tc, auto)
 
 
-def demo_little_buddy(tc: TerminalCore):
+def demo_little_buddy(tc: TerminalCore, auto: bool = False):
     print(tc._c(tc.BG_BLACK, ""))
     print(tc._c(tc.WHITE, "=== LITTLE BUDDY INTERACTIONS ==="))
     print()
@@ -333,28 +351,34 @@ def demo_little_buddy(tc: TerminalCore):
     print()
 
     print(tc._c(tc.DIM, "Press Enter to exit..."))
-    input()
+    _wait(tc, auto)
 
 
 def main():
     no_color = "--no-color" in sys.argv
     no_unicode = "--no-unicode" in sys.argv
+    auto_advance = "--auto-advance" in sys.argv
+    no_clear = "--no-clear" in sys.argv
 
     tc = TerminalCore(no_color=no_color, no_unicode=no_unicode)
 
     # Clear screen if possible
-    os.system("cls" if os.name == "nt" else "clear")
+    if not no_clear:
+        os.system("cls" if os.name == "nt" else "clear")
 
-    demo_splash(tc)
-    os.system("cls" if os.name == "nt" else "clear")
+    demo_splash(tc, auto=auto_advance)
+    if not no_clear:
+        os.system("cls" if os.name == "nt" else "clear")
 
-    demo_scut(tc)
-    os.system("cls" if os.name == "nt" else "clear")
+    demo_scut(tc, auto=auto_advance)
+    if not no_clear:
+        os.system("cls" if os.name == "nt" else "clear")
 
-    demo_chrome(tc)
-    os.system("cls" if os.name == "nt" else "clear")
+    demo_chrome(tc, auto=auto_advance)
+    if not no_clear:
+        os.system("cls" if os.name == "nt" else "clear")
 
-    demo_little_buddy(tc)
+    demo_little_buddy(tc, auto=auto_advance)
 
     # Reset terminal
     print(tc.RESET)

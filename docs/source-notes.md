@@ -19,8 +19,11 @@ and local authority rules to each adopting project.
 
 CRAB expands to:
 
-**Check -> Reason -> Act -> Bus**
+**CRAWL/Check -> Reason -> Act -> Bus**
+
+`Check` is the original implementation term. `CRAWL` is the expanded
+human-facing name for the same first phase: Context, Repo, Agents, Wire, and
+Limits.
 
 Earlier internal language described a related multi-session synchronization
 workflow. CRAB is the agent-neutral form intended for broader reuse.
-

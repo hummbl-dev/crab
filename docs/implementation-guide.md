@@ -13,9 +13,10 @@ For each repo or operation lane, document:
 - Protected files or systems.
 - Required peer-review gates.
 
-## 2. Define the Check Command Set
+## 2. Define the CRAWL / Check Command Set
 
-For git-backed work, a minimal Check command set usually includes:
+For git-backed work with no shared coordination surface, a minimal CRAWL/Check
+command set usually includes:
 
 ```bash
 git branch --show-current
@@ -25,6 +26,10 @@ git stash list
 
 Add the local bus read command for your environment.
 
+If a shared coordination surface exists, the bus, issue tracker, PR thread, job
+queue, or equivalent read is not optional. CRAWL must include the live source
+that can reveal blockers, ownership, unresolved proposals, or recent handoffs.
+
 For non-git work, replace these with the equivalent live-state checks:
 
 - Deployment status.
@@ -33,6 +38,17 @@ For non-git work, replace these with the equivalent live-state checks:
 - Database migration state.
 - Incident channel tail.
 - CI or monitor state.
+
+Keep CRAWL implementation-neutral. Mesh, SSH, Tailscale, host process, and disk
+probes belong in local profiles only when those sources can change the next
+safe action and the worker has authority to read them.
+
+CRAWL sources should be documented with permission boundaries:
+
+- Which sources are canonical.
+- Which probes require credentials, SSH, or privileged access.
+- Which probe failures are stop conditions.
+- Which protected surfaces must not be inspected without approval.
 
 ## 3. Define Authority Boundaries
 
@@ -87,4 +103,3 @@ Risky automation:
 - Auto-posting success without verifying the operation.
 - Hiding dirty worktree state behind truncated output.
 - Using local shadow buses that diverge from the canonical coordination surface.
-

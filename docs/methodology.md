@@ -4,7 +4,7 @@
 
 CRAB is a four-step execution loop for coordinated work:
 
-**Check -> Reason -> Act -> Bus**
+**CRAWL/Check -> Reason -> Act -> Bus**
 
 It is designed for environments where multiple agents, humans, or automation
 surfaces can modify shared state.
@@ -24,9 +24,19 @@ surfaces can modify shared state.
 - CRAB does not define one universal bus implementation.
 - CRAB does not grant authority to override local governance rules.
 
-## Step 1: Check
+## Step 1: CRAWL / Check
 
 Before acting, read the live state that can invalidate the requested work.
+
+CRAWL is the expanded human-facing name for the Check phase:
+
+| Letter | Meaning | Required question |
+|---|---|---|
+| C | Context | What did the requester ask, and what recent coordination state changes the prompt? |
+| R | Repo | What repository, branch, worktree, stash, PR, or CI state can invalidate the work? |
+| A | Agents | Which humans, agents, sessions, lanes, or daemons are active, blocked, or owners of dirty work? |
+| W | Wire | Is the coordination substrate current: bus, issue tracker, PR comments, queue, or other shared surface? |
+| L | Limits | What stop conditions, approvals, protected surfaces, credentials, or irreversible actions constrain the next step? |
 
 Minimum checks for a git-backed coordination surface:
 
@@ -37,15 +47,19 @@ Minimum checks for a git-backed coordination surface:
 - Recent coordination messages.
 - Open blockers or unresolved proposals in scope.
 
-The Check step must use live sources, not inherited summaries, when the state is
+The CRAWL/Check step must use live sources, not inherited summaries, when the state is
 cheap to verify.
+
+If there is no shared coordination surface, a git-only CRAWL may stop at repo
+and limit checks. If a bus, issue queue, PR thread, deployment channel, or other
+shared surface exists, recent coordination state is part of the minimum check.
 
 ## Step 2: Reason
 
 Integrate:
 
 - The requester instruction.
-- The live state from Check.
+- The live state from CRAWL/Check.
 - Local guardrails and authority boundaries.
 - Known stop conditions.
 - The message type that will be posted after Act.
@@ -100,4 +114,3 @@ Good CRAB execution is:
 - **Auditable**: leaves a receipt another worker can use.
 - **Honest**: distinguishes verified facts from assumptions.
 - **Timely**: posts the receipt before final response or handoff.
-
