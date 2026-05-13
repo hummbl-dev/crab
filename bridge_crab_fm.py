@@ -22,8 +22,6 @@ FM_REPO = Path("<USER_HOME>/PROJECTS/founder-mode")
 if str(FM_REPO) not in sys.path:
     sys.path.insert(0, str(FM_REPO))
 
-from founder_mode.bus.bus_writer_core import post_message  # noqa: E402
-
 FM_BUS_PATH = (FM_REPO / "founder_mode" / "_state" / "coordination" / "messages.tsv").resolve()
 
 # Regex to extract Retrograde log lines:
@@ -46,6 +44,8 @@ def _post_crab_status(lane: str, status: str, actions: str, retro: dict | None =
     else:
         msg = f"CRAB [{lane}] {status} — {actions}"
     try:
+        from founder_mode.bus.bus_writer_core import post_message
+
         post_message(
             bus_path=str(FM_BUS_PATH),
             from_id="crab-daemon",
