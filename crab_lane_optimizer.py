@@ -16,6 +16,7 @@ import argparse
 import copy
 import json
 import statistics
+import sys
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
@@ -221,11 +222,13 @@ def main(argv: list[str] | None = None) -> int:
         out = render_report(report)
 
     if args.output:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(out + "\n", encoding="utf-8")
         print(f"wrote report to {args.output}", file=sys.stderr)
 
     if args.apply and report.get("trial_config"):
         trial_path = Path("crab-daemon/config-trial.json")
+        trial_path.parent.mkdir(parents=True, exist_ok=True)
         trial_path.write_text(
             json.dumps(report["trial_config"], indent=2, ensure_ascii=False) + "\n",
             encoding="utf-8")

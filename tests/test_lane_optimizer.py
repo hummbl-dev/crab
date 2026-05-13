@@ -121,5 +121,66 @@ class TestAnalyzeEndToEnd(unittest.TestCase):
             self.assertIn("trial_config", report)
 
 
+class TestMainCli(unittest.TestCase):
+    def _write_inputs(self, tmp: Path) -> tuple[Path, Path]:
+        turns_path = tmp / "turns.jsonl"
+        turns_path.write_text(
+            json.dumps({
+                "reason": {"lane": "cleanup"},
+                "retrograde": {"dissonance": 0.7, "scuttle": True, "validated": False},
+            }) + "\n",
+            encoding="utf-8",
+        )
+        config_path = tmp / "config.json"
+        config_path.write_text(
+            json.dumps({
+                "lanes": [
+                    {"name": "cleanup", "max_actions_per_turn": 5,
+                     "cooldown_seconds": 3600, "interval_seconds": 3600},
+                ]
+            }),
+            encoding="utf-8",
+        )
+        return turns_path, config_path
+
+    def test_main_writes_output_report(self):
+        with tempfile.TemporaryDirectory() as tmp_name:
+            tmp = Path(tmp_name)
+            turns_path, config_path = self._write_inputs(tmp)
+            output_path = tmp / "reports" / "report.md"
+
+            rc = clo.main([
+                "--turn-log", str(turns_path),
+                "--config", str(config_path),
+                "--output", str(output_path),
+            ])
+
+            self.assertEqual(rc, 0)
+            self.assertTrue(output_path.exists())
+            self.assertIn("CRAB Lane Optimizer Report",
+                          output_path.read_text(encoding="utf-8"))
+
+    def test_main_apply_creates_trial_directory(self):
+        with tempfile.TemporaryDirectory() as tmp_name:
+            tmp = Path(tmp_name)
+            turns_path, config_path = self._write_inputs(tmp)
+            old_cwd = Path.cwd()
+            try:
+                import os
+                os.chdir(tmp)
+
+                rc = clo.main([
+                    "--turn-log", str(turns_path),
+                    "--config", str(config_path),
+                    "--apply",
+                    "--format", "json",
+                ])
+            finally:
+                os.chdir(old_cwd)
+
+            self.assertEqual(rc, 0)
+            self.assertTrue((tmp / "crab-daemon" / "config-trial.json").exists())
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

@@ -17,7 +17,18 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "docs", "brandi
 from terminal_core_demo import TerminalCore
 
 
-class TestTerminalCoreInstantiation(unittest.TestCase):
+class NoColorEnvIsolated(unittest.TestCase):
+    """Clear fleet NO_COLOR for tests that assert explicit color semantics."""
+
+    def setUp(self):
+        self._old_no_color = os.environ.pop("NO_COLOR", None)
+
+    def tearDown(self):
+        if self._old_no_color is not None:
+            os.environ["NO_COLOR"] = self._old_no_color
+
+
+class TestTerminalCoreInstantiation(NoColorEnvIsolated):
     """Verify TerminalCore initializes correctly under all flag combinations."""
 
     def test_default_init(self):
@@ -54,7 +65,7 @@ class TestTerminalCoreInstantiation(unittest.TestCase):
                 os.environ["NO_COLOR"] = old
 
 
-class TestColorRendering(unittest.TestCase):
+class TestColorRendering(NoColorEnvIsolated):
     """Verify color/no-color output correctness."""
 
     def test_color_wrap_adds_escapes(self):
@@ -76,7 +87,7 @@ class TestColorRendering(unittest.TestCase):
         self.assertTrue(out.endswith("\033[0m"))
 
 
-class TestBorderRendering(unittest.TestCase):
+class TestBorderRendering(NoColorEnvIsolated):
     """Verify border sets render correctly per unicode flag."""
 
     def test_rounded_borders_default(self):
@@ -105,7 +116,7 @@ class TestBorderRendering(unittest.TestCase):
         self.assertEqual(b["v"], "|")
 
 
-class TestBoxRendering(unittest.TestCase):
+class TestBoxRendering(NoColorEnvIsolated):
     """Verify TUI chrome box renders with correct structure."""
 
     def test_box_produces_lines(self):
@@ -140,7 +151,7 @@ class TestBoxRendering(unittest.TestCase):
         self.assertEqual(len(lines[0]), len(lines[-1]))
 
 
-class TestPillRendering(unittest.TestCase):
+class TestPillRendering(NoColorEnvIsolated):
     """Verify status pill rendering."""
 
     def test_pill_no_color(self):
@@ -160,7 +171,7 @@ class TestPillRendering(unittest.TestCase):
         self.assertEqual(out, "[OK]")
 
 
-class TestProgressBar(unittest.TestCase):
+class TestProgressBar(NoColorEnvIsolated):
     """Verify progress bar rendering."""
 
     def test_progress_zero_percent(self):
@@ -182,7 +193,7 @@ class TestProgressBar(unittest.TestCase):
         self.assertIn("50%", out)
 
 
-class TestScutMascot(unittest.TestCase):
+class TestScutMascot(NoColorEnvIsolated):
     """Verify Scut mascot expressions render without error."""
 
     def test_all_expressions_render(self):
@@ -206,7 +217,7 @@ class TestScutMascot(unittest.TestCase):
         self.assertIn("___", out)
 
 
-class TestLogoRendering(unittest.TestCase):
+class TestLogoRendering(NoColorEnvIsolated):
     """Verify logo variants render without error."""
 
     def test_logo_small_renders(self):
@@ -243,7 +254,7 @@ class TestLogoRendering(unittest.TestCase):
         self.assertIn("Coordination Receipts", out)
 
 
-class TestHRSafety(unittest.TestCase):
+class TestHRSafety(NoColorEnvIsolated):
     """Verify no secrets or hazardous content leaks in rendered output."""
 
     def test_no_api_keys_in_output(self):
@@ -261,7 +272,7 @@ class TestHRSafety(unittest.TestCase):
             self.assertNotIn(pat, combined.lower())
 
 
-class TestEscapeSequenceWellFormedness(unittest.TestCase):
+class TestEscapeSequenceWellFormedness(NoColorEnvIsolated):
     """Verify ANSI escape sequences are syntactically valid."""
 
     def test_all_color_codes_are_valid_sgr(self):
