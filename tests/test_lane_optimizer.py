@@ -160,26 +160,21 @@ class TestMainCli(unittest.TestCase):
             self.assertIn("CRAB Lane Optimizer Report",
                           output_path.read_text(encoding="utf-8"))
 
-    def test_main_apply_creates_trial_directory(self):
+    def test_main_apply_writes_trial_next_to_config(self):
         with tempfile.TemporaryDirectory() as tmp_name:
             tmp = Path(tmp_name)
             turns_path, config_path = self._write_inputs(tmp)
-            old_cwd = Path.cwd()
-            try:
-                import os
-                os.chdir(tmp)
 
-                rc = clo.main([
-                    "--turn-log", str(turns_path),
-                    "--config", str(config_path),
-                    "--apply",
-                    "--format", "json",
-                ])
-            finally:
-                os.chdir(old_cwd)
+            rc = clo.main([
+                "--turn-log", str(turns_path),
+                "--config", str(config_path),
+                "--apply",
+                "--format", "json",
+            ])
 
             self.assertEqual(rc, 0)
-            self.assertTrue((tmp / "crab-daemon" / "config-trial.json").exists())
+            self.assertTrue((tmp / "config-trial.json").exists())
+            self.assertFalse((Path.cwd() / "crab-daemon" / "config-trial.json").exists())
 
 
 if __name__ == "__main__":

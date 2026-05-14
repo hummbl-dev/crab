@@ -210,7 +210,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--config", type=Path, default=DEFAULT_CONFIG_PATH)
     p.add_argument("--output", type=Path, default=None)
     p.add_argument("--apply", action="store_true",
-                   help="write trial config to crab-daemon/config-trial.json")
+                   help="write trial config next to selected config path")
     p.add_argument("--format", choices=["markdown", "json"], default="markdown")
     args = p.parse_args(argv)
 
@@ -227,7 +227,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"wrote report to {args.output}", file=sys.stderr)
 
     if args.apply and report.get("trial_config"):
-        trial_path = Path("crab-daemon/config-trial.json")
+        trial_path = args.config.with_name("config-trial.json")
         trial_path.parent.mkdir(parents=True, exist_ok=True)
         trial_path.write_text(
             json.dumps(report["trial_config"], indent=2, ensure_ascii=False) + "\n",
