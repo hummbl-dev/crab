@@ -80,7 +80,7 @@ Before listing what CRAB will do, here is what it currently gets wrong. These ar
 
 ## Track 1: Protocol Evolution (The Daemon)
 
-**Current:** v1.0.0 -- `crab_daemon.py`, 625 lines, 18 tests, 3 lanes (cleanup, git-audit, bus-audit), 4 bus backends.
+**Current:** v1.0.0 -- `crab_daemon.py`, 79-test local suite, 3 lanes (cleanup, git-audit, bus-audit), 4 bus backends. Line counts are intentionally omitted here because they drift quickly.
 
 ### Phase A: Core Hardening (Now -- v1.1)
 
@@ -179,7 +179,7 @@ Before listing what CRAB will do, here is what it currently gets wrong. These ar
 
 | Product | Status | Blockers | Action |
 |---|---|---|---|
-| **CRAB Protocol** (this repo) | v1.0.0 shipped | Needs license decision + landing page | **P0: pick license (Apache-2.0 recommended)** |
+| **CRAB Protocol** (this repo) | v1.0.0 private incubator | Needs repo-wide public/private split audit + landing page | **P0: approve or defer public release; Apache-2.0 already selected** |
 | **hummbl-governance** | Already on PyPI | Maintenance only | Continue |
 
 ### Tier 2: Extract with Refactoring (2--4 weeks each)
@@ -223,7 +223,7 @@ Before listing what CRAB will do, here is what it currently gets wrong. These ar
 | Redteam audit before any public release | `PRODUCTIZATION.md` Sec 5 | 1 day | **Mandatory gate** |
 | Strip hardcoded infrastructure (IPs, hostnames, emails) | `PRODUCTIZATION.md` Sec 5 | 2 days | Mandatory |
 | CI in isolation (no HUMMBL services) | `PRODUCTIZATION.md` Sec 5 | 1 day | Mandatory |
-| License file (Apache-2.0 recommended) | `PRODUCTIZATION.md` Sec 6 | 10 min | **Operator decision needed** |
+| License file | `LICENSE` + `PRODUCTIZATION.md` Sec 6 | Done | Apache-2.0 selected |
 | Code of Conduct + CONTRIBUTING.md | `PRODUCTIZATION.md` Sec 5 | 1–4 hrs | Mandatory |
 
 **Kill criterion**: This track will be retired if redteam audit finds unfixable vulnerability in reflex lanes.
@@ -404,7 +404,7 @@ The CHECK phase claims to "survey all tracks for cross-track collisions." Here i
   - `docs/branding/HUMMBL_TERMINAL_CORE_DESIGN_SYSTEM.md` (canon + brand)
 - **New concept:** Scuttlebutt Layer -- informal gossip bus for agent fleets
 - **Unified artifact:** `docs/UNIFIED_ROADMAP.md`
-- **Next gate:** Operator picks license + release timeline (Track 4) AND implement Retrograde Validator (Track 1). These are not mutually exclusive. In fact, Retrograde is a prerequisite for confident public release -- knowing a claim has been validated gives the release a defensibility it would not otherwise have. Running them in parallel is possible but risky: if the release happens before Retrograde is ready, the released code carries unvalidated assertions. Recommended sequence: Retrograde first (2–8 hrs), then license decision, then release timeline.
+- **Next gate:** Operator approves or defers the public-release timeline after repo-wide public/private split audit (Track 4) AND implement Retrograde Validator (Track 1). These are not mutually exclusive. In fact, Retrograde is a prerequisite for confident public release -- knowing a claim has been validated gives the release a defensibility it would not otherwise have. Running them in parallel is possible but risky: if the release happens before Retrograde is ready, the released code carries unvalidated assertions. Recommended sequence: Retrograde first (2–8 hrs), then public-release audit, then release timeline.
 
 **Why this is not a false dichotomy:** The original phrasing presented these as "pick one" alternatives. They are not. A public release without Retrograde is possible but less defensible. A Retrograde without a release target is possible but has no external validation event. The question is not "which one?" but "in what order, and what risk do we accept if we parallelize?"
 

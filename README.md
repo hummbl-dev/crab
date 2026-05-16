@@ -3,8 +3,8 @@
 **Coordination Receipts for Agent Behavior**
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://python.org)
-[![Tests](https://img.shields.io/badge/tests-18%2F18%20passing-brightgreen.svg)](tests/test_daemon.py)
+[![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://python.org)
+[![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](tests/)
 
 CRAB is a lightweight coordination protocol for multi-agent systems:
 
@@ -31,7 +31,7 @@ CRAB makes every agent turn **observable** and **accountable**. The bus receipt 
 - **4-step protocol** — CRAWL/Check, Reason, Act, Bus. Structured, repeatable, safe.
 - **Pluggable bus backends** — TSV, JSONL, stdout, or custom callback. One-line switch.
 - **Multi-lane work streams** — Independent lanes with separate schedules and stop conditions.
-- **Zero dependencies** — Python 3.8+ stdlib only. No `pip install`.
+- **Zero runtime dependencies** — Python 3.11+ stdlib only. No runtime `pip install`.
 - **Container ready** — Single file. Drop into Docker, Kubernetes, or systemd.
 - **Observable by design** — Every turn produces a timestamped receipt. Replay any session.
 
@@ -195,13 +195,15 @@ daemon.stop()
 python -m pytest tests/ -v
 ```
 
-18 tests covering:
+The test suite covers:
 - Config serialization/deserialization
 - CRAWL/Check phase (live state, git state, bus tail, blockers)
 - Reason phase (stop conditions, lane selection)
 - Act phase (cleanup, audit, error handling)
 - Bus phase (all four backends)
 - Daemon lifecycle (run_once, run, stop)
+
+Run `python -m pytest tests/ -q` to validate the local suite. Bridge tests (`TestBusBridge`) write to a local founder-mode bus path and should be mocked or excluded with `-k 'not TestBusBridge'` when running outside that environment.
 
 ## Documentation
 
@@ -211,13 +213,14 @@ python -m pytest tests/ -v
 - [Message Types](docs/message-types.md) — bus message taxonomy
 - [Source Notes](docs/source-notes.md) — origin and relation to HUMMBL founder-mode
 - [Release Notes](docs/RELEASE_NOTES.md) — draft/stable protocol status
+- [Repo Boundaries](docs/REPO_BOUNDARIES.md) — public-core vs. HUMMBL-internal surfaces
 - [Security Audit](AUDIT.md) — redteam audit results (10/10 PASS)
 - [Productization Plan](PRODUCTIZATION.md) — roadmap from internal ops to marketable product
 
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for:
-- Development setup (hint: there isn't one — it's stdlib-only)
+- Development setup
 - Code standards
 - Commit message format
 - Pull request process
@@ -231,7 +234,9 @@ Apache-2.0. See [LICENSE](LICENSE).
 ## Status
 
 - **Protocol**: v1.1 draft — CRAWL/Check wording proposed for docs-first adoption; v1.0 Check terminology remains compatible
-- **Daemon**: v1.0 — reference implementation, tested, audited
-- **Security**: [Redteam audit](AUDIT.md) — 10/10 PASS
+- **Daemon**: v1.0 — reference implementation, tested, audited for its portable core
+- **Retrograde**: implemented in the reference daemon as optional validation behavior; not yet a required public protocol phase
+- **Security**: [Redteam audit](AUDIT.md) — daemon-scoped 10/10 PASS; repo-wide public-release audit still required
+- **Publication**: private incubator; see [Repo Boundaries](docs/REPO_BOUNDARIES.md) before any public split
 
 Created by [HUMMBL Research Institute](https://hummbl.io).

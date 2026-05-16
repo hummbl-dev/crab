@@ -1,7 +1,7 @@
 # CRAB Productization Plan
 ## From Internal Ops to Marketable Products
 
-**Status**: Brainstorm v0.1.0 — 2026-05-10
+**Status**: Brainstorm v0.1.1 — 2026-05-16 hygiene note
 **Classification**: INTERNAL — operator eyes only
 **Author**: Devin (Kimi K2.6)
 **Context**: Commit `2e7ed48` just landed the portable CRAB Daemon in this repo. The next question is: what else from the HUMMBL internal ops platform (`founder-mode`) can and should become a standalone product?
@@ -14,9 +14,9 @@ The `hummbl-dev/founder-mode` repo is a **production multi-agent operating syste
 
 | Coupling Type | Count | Examples |
 |-------------|-------|----------|
-| Machine profiles | 19 service files | `nodezero`, `anvil`, `huxley` hardcoded as Ollama hosts, inference nodes, CI runners |
-| Tailscale IPs | 512 Python references | `100.109.69.16` (nodezero), `100.119.90.32` (anvil), `100.111.244.56` (huxley) |
-| Hardcoded emails | 46 | `reuben@hummbl.io`, `dan@...` in configs, adapters, notifications |
+| Machine profiles | 19 service files | Internal hostnames hardcoded as Ollama hosts, inference nodes, CI runners |
+| Tailscale IPs | 512 Python references | Internal tailnet addresses and host mappings |
+| Hardcoded emails | 46 | Internal personal/work emails in configs, adapters, notifications |
 | Bus paths | 36 files | `_state/coordination/messages.tsv` assumes specific repo layout |
 | Agent identities | ~40 | `claude-code`, `codex`, `gemini`, `sov`, `echo`, `soma`, `devin`, `opencode` — all HUMMBL-specific roster |
 | Windows paths | scattered | `<USER_HOME>`, `.claude/rules/`, `.agents/rules/` in guardrails and launchers |
@@ -32,7 +32,7 @@ The `hummbl-dev/founder-mode` repo is a **production multi-agent operating syste
 
 | Product | Status | What It Is | Portability Blockers | Action |
 |---------|--------|-----------|----------------------|--------|
-| **CRAB Protocol** | `DONE` — in this repo | 4-step coordination protocol + daemon | None. Already clean. | **Ship v1.0 when ready** |
+| **CRAB Protocol** | `DONE` — private incubator | 4-step coordination protocol + daemon | Repo-wide public/private split audit required | **Prepare public-core subset** |
 | **hummbl-governance** | `DONE` — on PyPI | 7 safety primitives (kill switch, circuit breaker, delegation tokens, etc.) | Already stdlib-only, already on PyPI | **Continue maintaining** |
 | **Coordination Bus** | `NEEDS WORK` | TSV append-only log with `flock` locking, identity validation, message type enforcement | Hardcoded paths, HUMMBL identity registry, HMAC signing secret schema | Extract bus core as `crab-bus` or `coordination-bus` |
 
@@ -181,9 +181,11 @@ Other products spread if they:
 
 ---
 
-## 6. License Decision — Operator Choice Required
+## 6. License Status — Apache-2.0 Selected
 
-CRAB OSS needs a license before public release. Here are the viable options:
+CRAB now has a repository `LICENSE` file using Apache-2.0. The remaining gate is not license selection; it is whether and when Reuben approves a public release after the repo-wide public/private split audit.
+
+Historical options considered:
 
 | License | Permissiveness | Patent Protection | Commercial Use | Best For |
 |---------|---------------|-------------------|----------------|----------|
@@ -192,7 +194,7 @@ CRAB OSS needs a license before public release. Here are the viable options:
 | **PolyForm Noncommercial 1.0.0** | Restricted | None | Prohibited without separate agreement | Delayed monetization — keeps commercial rights reserved |
 | **AGPL-3.0** | Copyleft | Yes | Allowed, but modifications must be shared | If you want to force contributions back (risk: scares companies away) |
 
-### Recommendation: Apache-2.0
+### Selected: Apache-2.0
 
 **Rationale:**
 - CRAB is a *protocol* — protocols need network effects to be valuable
@@ -205,7 +207,7 @@ CRAB OSS needs a license before public release. Here are the viable options:
 
 **If you choose MIT:** Simpler, but you lose patent protection. Fine for a hobby project; risky for something you might patent-protect later.
 
-**Decision needed:** Pick one and add a `LICENSE` file before v1.0 tag.
+**Remaining decision needed:** approve or defer public release after the public-core subset is audited. Do not treat this private incubator repo as the public artifact by default.
 
 ---
 
@@ -216,7 +218,7 @@ CRAB OSS needs a license before public release. Here are the viable options:
 **What doesn't:** Website, examples, blog post, community docs
 **Pros:** Fastest feedback loop, lowest overhead
 **Cons:** First impression is thin; harder to build momentum
-**Effort:** 2-4 hours (add LICENSE, cut v1.0 tag, write release notes)
+**Effort:** 2-4 hours after repo-wide public/private split audit (verify LICENSE, cut v1.0 tag, write release notes)
 
 ### Option B: Two-Week Sprint (Recommended)
 **What ships:** Everything in Option A + website landing page + 3 examples + `CONTRIBUTING.md` + `CODE_OF_CONDUCT.md`
@@ -233,17 +235,17 @@ CRAB OSS needs a license before public release. Here are the viable options:
 
 ### Recommended: Option B (Two-Week Sprint)
 
-The portable daemon is clean, audited, and tested. The risk of waiting is higher than the risk of shipping thin. A two-week sprint gives you:
+If public release is approved after audit, a two-week sprint gives you:
 - A landing page that explains CRAB in 60 seconds
 - 3 working examples (Python script, shell script, Docker compose)
 - A contribution guide that signals you're open to external contributors
-- A v1.0 tag that signals stability
+- A v1.0 tag that signals stability after the public-core subset is verified
 
 **Sprint breakdown:**
 
 | Day | Task |
 |-----|------|
-| 1-2 | Add LICENSE, CONTRIBUTING.md, CODE_OF_CONDUCT.md |
+| 1-2 | Verify LICENSE, CONTRIBUTING.md, CODE_OF_CONDUCT.md and public/private boundaries |
 | 3-4 | Build landing page (single HTML, no framework, hosted on GitHub Pages) |
 | 5-6 | Write 3 examples: basic Python, bus backend plugin, Docker compose |
 | 7-8 | Write "Getting Started" guide + API reference |
@@ -275,4 +277,4 @@ Once CRAB OSS v1.0 is live, the next extraction target depends on what feedback 
 - Portable daemon: `crab_daemon.py` + `tests/test_daemon.py`
 - Issue tracking: GitHub Issue #1 + #2 in `hummbl-dev/crab`
 - Peer review: Issue #2 awaiting external sign-off
-- **Next gate: Operator picks license + timeline (Section 6 & 7)**
+- **Next gate: Operator approves or defers public release after repo-wide public/private split audit (Section 6 & 7)**

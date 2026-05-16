@@ -4,6 +4,8 @@
 
 Status: draft, not released.
 
+Packaging note: `pyproject.toml` remains pre-1.0 for package metadata in this hygiene pass. Historical git tags and draft protocol labels do not by themselves authorize a public release or package version bump.
+
 This draft keeps CRAB as a four-step public protocol:
 
 ```text

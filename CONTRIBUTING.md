@@ -14,7 +14,7 @@ Thank you for your interest in making CRAB better. This document covers how to c
 
 ## Development Setup
 
-CRAB is intentionally simple — it requires only Python 3.8+ and the standard library.
+CRAB is intentionally simple — it requires only Python 3.11+ and the standard library at runtime.
 
 ```bash
 python -m venv .venv
@@ -22,7 +22,7 @@ source .venv/bin/activate  # or .venv\Scripts\activate on Windows
 python -m pytest tests/ -v
 ```
 
-No `pip install -e .` or external dependencies needed.
+No runtime dependencies are needed. Development and test commands may use editable installs or test extras when validating packaging behavior.
 
 ## Code Standards
 

@@ -3,6 +3,8 @@
 **Target**: `crab_daemon.py` (portable reference implementation)
 **Classification**: INTERNAL — pre-commit security review
 
+**Scope caveat:** This audit is daemon-scoped. It is not a repo-wide public-release audit. The repository also contains HUMMBL-internal bridge, roadmap, productization, and research artifacts that require a separate public/private split review before any external release.
+
 ---
 
 ## Attack Surface
@@ -21,8 +23,8 @@
 
 | # | Probe | Expected | Result |
 |---|-------|----------|--------|
-| D1 | Scan for secrets in source | No API keys, tokens, passwords | **PASS** — zero matches for `sk-`, `ghp_`, `AKIA`, `password=` |
-| D2 | Scan for personal/operational details | No real names, emails, hostnames, IPs | **PASS** — zero matches for `hummbl`, `anvil`, `nodezero`, `<TAILNET>`, `reuben`, `dan` |
+| D1 | Scan for secrets in source | No API keys, tokens, passwords | **PASS** — zero matches for common API-key, cloud-key, token, and password patterns |
+| D2 | Scan for personal/operational details | No real names, emails, hostnames, IPs | **PASS** — zero matches for known internal org, host, tailnet, and personal-identity markers |
 | D3 | Check for hardcoded paths that leak structure | No repo-specific paths | **PASS** — all paths are relative (`crab-daemon/`, `bus/`, `.`) or configurable |
 | D4 | Check for env-controlled critical paths | No `os.environ.get` for paths | **PASS** — no env lookups in the module |
 
@@ -69,11 +71,12 @@
 
 ## Recommendations before public release
 
-1. Run `bandit -r crab_daemon.py` and `semgrep --config auto` on a machine with these tools installed
-2. Add a test that verifies no `os.environ.get` appears in future revisions
-3. Add a CONTRIBUTING.md note: "Never commit real hostnames, IPs, or tokens"
-4. Consider adding file locking to the TSV backend using `fcntl` / `msvcrt` (platform-specific)
+1. Run `bandit -r crab_daemon.py` and `semgrep --config auto` on a machine with these tools installed.
+2. Add a test that verifies no `os.environ.get` appears in future revisions.
+3. Add a CONTRIBUTING.md note: "Never commit real hostnames, IPs, or tokens".
+4. Consider adding file locking to the TSV backend using `fcntl` / `msvcrt` (platform-specific).
+5. Run a repo-wide public/private split audit covering docs, bridge modules, examples, generated artifacts, and git history.
 
 ## Next action
 
-The portable daemon is **clean for commit to the private repo**. The two LOW findings are documentation/operational, not code defects. Run formal bandit/semgrep before any public release.
+The portable daemon is **clean for commit to the private repo**. The two LOW findings are documentation/operational, not code defects. Run formal bandit/semgrep and a repo-wide public/private split audit before any public release.
