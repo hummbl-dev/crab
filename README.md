@@ -4,6 +4,7 @@
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://python.org)
+[![Runtime Deps](https://img.shields.io/badge/runtime%20deps-zero-brightgreen)]()
 [![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](tests/)
 
 CRAB is a lightweight coordination protocol for multi-agent systems:
@@ -238,5 +239,10 @@ Apache-2.0. See [LICENSE](LICENSE).
 - **Retrograde**: implemented in the reference daemon as optional validation behavior; not yet a required public protocol phase
 - **Security**: [Redteam audit](AUDIT.md) — daemon-scoped 10/10 PASS; repo-wide public-release audit still required
 - **Publication**: private incubator; see [Repo Boundaries](docs/REPO_BOUNDARIES.md) before any public split
+
+## Repository Health
+
+See [REPO_HEALTH.md](docs/REPO_HEALTH.md) for validation command expectations and
+branch-protection posture.
 
 Created by [HUMMBL Research Institute](https://hummbl.io).
