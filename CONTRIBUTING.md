@@ -6,7 +6,7 @@ Thank you for your interest in making CRAB better. This document covers how to c
 
 1. Fork the repository on GitHub
 2. Clone your fork locally
-3. Create a feature branch: `git checkout -b feat/your-name/description`
+3. Create a feature branch: `git checkout -b type/agent/short-desc`
 4. Make your changes
 5. Run the test suite: `python -m pytest tests/ -v`
 6. Commit with a clear message following [Conventional Commits](https://www.conventionalcommits.org/)
