@@ -29,6 +29,7 @@ from crab_daemon import (
     default_config,
     reason_phase,
     retrograde_phase,
+    _validate_identity,
 )
 
 
@@ -118,6 +119,22 @@ class TestReasonPhase:
         reason = reason_phase(check, lane)
         assert reason.should_act is True
         assert reason.stop_condition is None
+
+    def test_audit_lanes_allow_dirty_by_default(self):
+        """B3 fix: read-only audit lanes (git-audit, bus-audit) have allow-dirty
+        in default_config() so CRAB doesn't stall on dirty worktrees."""
+        config = default_config()
+        git_audit = next(l for l in config.lanes if l.name == "git-audit")
+        bus_audit = next(l for l in config.lanes if l.name == "bus-audit")
+        assert "allow-dirty" in git_audit.actions
+        assert "allow-dirty" in bus_audit.actions
+
+    def test_cleanup_lane_does_not_allow_dirty_by_default(self):
+        """B3 fix: mutating cleanup lane must NOT have allow-dirty by default —
+        it runs git branch -D which mutates the repo."""
+        config = default_config()
+        cleanup = next(l for l in config.lanes if l.name == "cleanup")
+        assert "allow-dirty" not in cleanup.actions
 
 
 class TestActPhase:
@@ -304,6 +321,20 @@ class TestIdentityRegistry:
         )
         # Dry run should succeed even with unapproved identity (no actual post)
         assert bus_phase(config, turn) is True
+
+    def test_all_approved_roster_agents_accepted(self, tmp_path):
+        """B5 regression: all approved fleet agents from agent-roster.md are
+        in _APPROVED_BUS_IDENTITIES and pass identity validation."""
+        roster_agents = [
+            "claude-code", "codex", "apex", "gemini", "sov", "kai",
+            "echo", "soma", "human", "devin", "opencode",
+            "nexus", "auditor", "hermes",
+        ]
+        for agent in roster_agents:
+            assert _validate_identity(agent) is True, (
+                f"Agent '{agent}' from agent-roster.md is missing from "
+                f"_APPROVED_BUS_IDENTITIES — registry drift detected"
+            )
 
 
 class TestCrabDaemon:

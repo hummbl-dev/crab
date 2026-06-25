@@ -845,8 +845,8 @@ def default_config() -> DaemonConfig:
         poll_interval=60.0,
         lanes=[
             LaneConfig(name="cleanup", enabled=True, interval_seconds=3600.0, cooldown_seconds=3600.0, actions=["prune-gone"]),
-            LaneConfig(name="git-audit", enabled=True, interval_seconds=1800.0, cooldown_seconds=1800.0),
-            LaneConfig(name="bus-audit", enabled=True, interval_seconds=600.0, cooldown_seconds=600.0),
+            LaneConfig(name="git-audit", enabled=True, interval_seconds=1800.0, cooldown_seconds=1800.0, actions=["allow-dirty"]),
+            LaneConfig(name="bus-audit", enabled=True, interval_seconds=600.0, cooldown_seconds=600.0, actions=["allow-dirty"]),
         ],
     )
 
