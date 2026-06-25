@@ -103,6 +103,22 @@ class TestReasonPhase:
         reason = reason_phase(check, lane)
         assert reason.should_act is False
 
+    def test_blocks_on_dirty_by_default(self):
+        """CRAB-001: dirty worktree blocks action unless lane opts in via allow-dirty."""
+        check = CheckResult("t", "main", True, 0, [], [])
+        lane = LaneConfig(name="cleanup")
+        reason = reason_phase(check, lane)
+        assert reason.should_act is False
+        assert reason.stop_condition == "dirty_worktree"
+
+    def test_allows_dirty_when_lane_opts_in(self):
+        """Lane with allow-dirty action proceeds on dirty worktree."""
+        check = CheckResult("t", "main", True, 0, [], [])
+        lane = LaneConfig(name="cleanup", actions=["allow-dirty"])
+        reason = reason_phase(check, lane)
+        assert reason.should_act is True
+        assert reason.stop_condition is None
+
 
 class TestActPhase:
     @pytest.fixture
@@ -158,6 +174,116 @@ class TestBusPhase:
         assert bus_phase(config, turn) is True
         captured = capsys.readouterr()
         assert "[BUS]" in captured.out
+
+
+class TestCallbackSecurity:
+    """CRAB-002: command injection via callback backend."""
+
+    def test_callback_blocked_without_env_var(self, tmp_path):
+        """Callback shell execution disabled by default (no CRAB_ALLOW_CALLBACK_SHELL)."""
+        import os
+        old = os.environ.pop("CRAB_ALLOW_CALLBACK_SHELL", None)
+        try:
+            config = DaemonConfig(bus=BusConfig(backend="callback", callback="echo hello"))
+            turn = CrabTurn(
+                check=CheckResult("t", "main", False, 0, [], []),
+                reason=ReasonResult(True, "test", "STATUS", "rationale"),
+                act=ActResult(True, ["did thing"], [], []),
+            )
+            from crab_daemon import _bus_post_callback
+            assert _bus_post_callback(config, turn, "msg") is False
+        finally:
+            if old is not None:
+                os.environ["CRAB_ALLOW_CALLBACK_SHELL"] = old
+
+    def test_callback_blocked_when_not_in_allowlist(self, tmp_path, monkeypatch):
+        """Callback not matching allowlist is rejected even with env var set."""
+        monkeypatch.setenv("CRAB_ALLOW_CALLBACK_SHELL", "1")
+        config = DaemonConfig(bus=BusConfig(backend="callback", callback="rm -rf /"))
+        turn = CrabTurn(
+            check=CheckResult("t", "main", False, 0, [], []),
+            reason=ReasonResult(True, "test", "STATUS", "rationale"),
+            act=ActResult(True, ["did thing"], [], []),
+        )
+        from crab_daemon import _bus_post_callback
+        assert _bus_post_callback(config, turn, "msg") is False
+
+    def test_callback_allowed_when_in_allowlist_with_env(self, tmp_path, monkeypatch):
+        """Callback matching allowlist with env var set proceeds (python prefix)."""
+        monkeypatch.setenv("CRAB_ALLOW_CALLBACK_SHELL", "1")
+        config = DaemonConfig(bus=BusConfig(backend="callback", callback="python -c 'pass'"))
+        turn = CrabTurn(
+            check=CheckResult("t", "main", False, 0, [], []),
+            reason=ReasonResult(True, "test", "STATUS", "rationale"),
+            act=ActResult(True, ["did thing"], [], []),
+        )
+        from crab_daemon import _bus_post_callback
+        # This should attempt to run and return True (python -c 'pass' exits 0)
+        assert _bus_post_callback(config, turn, "msg") is True
+
+
+class TestIdentityRegistry:
+    """CRAB-004: bus receipt forgery via unverified identity."""
+
+    def test_approved_identity_passes(self, tmp_path):
+        """Default crab-daemon identity is in the approved registry."""
+        config = DaemonConfig(
+            identity="crab-daemon",
+            bus=BusConfig(path=str(tmp_path / "bus.tsv")),
+            dry_run=False,
+        )
+        turn = CrabTurn(
+            check=CheckResult("t", "main", False, 0, [], []),
+            reason=ReasonResult(True, "test", "STATUS", "rationale"),
+            act=ActResult(True, ["did thing"], [], []),
+        )
+        assert bus_phase(config, turn) is True
+
+    def test_forged_identity_rejected(self, tmp_path):
+        """Arbitrary identity not in registry is rejected (CRAB-004)."""
+        config = DaemonConfig(
+            identity="evil-attacker",
+            bus=BusConfig(path=str(tmp_path / "bus.tsv")),
+            dry_run=False,
+        )
+        turn = CrabTurn(
+            check=CheckResult("t", "main", False, 0, [], []),
+            reason=ReasonResult(True, "test", "STATUS", "rationale"),
+            act=ActResult(True, ["did thing"], [], []),
+        )
+        assert bus_phase(config, turn) is False
+        # Verify nothing was written to the bus
+        assert not pathlib.Path(config.bus.path).exists()
+
+    def test_env_var_adds_custom_identity(self, tmp_path, monkeypatch):
+        """CRAB_ALLOWED_IDENTITIES env var adds custom identities to registry."""
+        monkeypatch.setenv("CRAB_ALLOWED_IDENTITIES", "custom-daemon")
+        config = DaemonConfig(
+            identity="custom-daemon",
+            bus=BusConfig(path=str(tmp_path / "bus.tsv")),
+            dry_run=False,
+        )
+        turn = CrabTurn(
+            check=CheckResult("t", "main", False, 0, [], []),
+            reason=ReasonResult(True, "test", "STATUS", "rationale"),
+            act=ActResult(True, ["did thing"], [], []),
+        )
+        assert bus_phase(config, turn) is True
+
+    def test_dry_run_skips_identity_check(self, tmp_path):
+        """Dry run mode skips identity validation (no bus post anyway)."""
+        config = DaemonConfig(
+            identity="evil-attacker",
+            bus=BusConfig(path=str(tmp_path / "bus.tsv")),
+            dry_run=True,
+        )
+        turn = CrabTurn(
+            check=CheckResult("t", "main", False, 0, [], []),
+            reason=ReasonResult(True, "test", "STATUS", "rationale"),
+            act=ActResult(True, ["did thing"], [], []),
+        )
+        # Dry run should succeed even with unapproved identity (no actual post)
+        assert bus_phase(config, turn) is True
 
 
 class TestCrabDaemon:

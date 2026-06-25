@@ -62,6 +62,34 @@ DEFAULT_IDENTITY = "crab-daemon"
 DEFAULT_POLL_INTERVAL = 60.0
 DEFAULT_LANE_COOLDOWN = 300.0
 
+# CRAB-004 fix from Tier 1 cyber scan: identity registry for bus posts.
+# Prevents bus receipt forgery by validating config.identity against an
+# allowlist of approved bus identities before writing to the bus.
+# Source: .agents/rules/agent-roster.md approved canonicals + system/script
+# identities. Override via CRAB_ALLOWED_IDENTITIES env var (comma-separated).
+_APPROVED_BUS_IDENTITIES: frozenset[str] = frozenset({
+    # Agent roster (from .agents/rules/agent-roster.md)
+    "claude-code", "codex", "apex", "gemini", "sov", "kai",
+    "echo", "soma", "human", "devin", "opencode",
+    # System / script identities
+    "system", "scheduler", "crab-daemon", "lead-doctor",
+    "budget-watcher", "scheduler-loop", "nexus", "auditor", "hermes",
+})
+
+
+def _get_allowed_identities() -> frozenset[str]:
+    """Return the allowed identity set, merged with env var override if set."""
+    env_extra = os.environ.get("CRAB_ALLOWED_IDENTITIES", "")
+    if not env_extra.strip():
+        return _APPROVED_BUS_IDENTITIES
+    extra = {name.strip() for name in env_extra.split(",") if name.strip()}
+    return _APPROVED_BUS_IDENTITIES | extra
+
+
+def _validate_identity(identity: str) -> bool:
+    """Check if an identity is approved for bus posts (CRAB-004)."""
+    return identity in _get_allowed_identities()
+
 # ---------------------------------------------------------------------------
 # Data structures
 # ---------------------------------------------------------------------------
@@ -289,6 +317,17 @@ def reason_phase(check: CheckResult, lane: LaneConfig) -> ReasonResult:
             should_act=False, lane=lane.name, message_type="STATUS",
             rationale=f"Stash non-empty ({check.stash_count}) — skipping stash-sensitive lane",
             stop_condition="non_empty_stash",
+        )
+
+    # Dirty worktree enforcement (CRAB-001 fix from Tier 1 cyber scan).
+    # Default is mandatory: a lane must explicitly opt in via "allow-dirty"
+    # to proceed on a dirty worktree. This prevents the CRAB safety net from
+    # being bypassed for the most common dirty-state scenarios.
+    if check.dirty and "allow-dirty" not in lane.actions:
+        return ReasonResult(
+            should_act=False, lane=lane.name, message_type="STATUS",
+            rationale=f"Worktree dirty and lane does not allow dirty operation — skipping",
+            stop_condition="dirty_worktree",
         )
 
     return ReasonResult(
@@ -607,14 +646,43 @@ def _bus_post_callback(config: DaemonConfig, turn: CrabTurn, message: str) -> bo
     if not cb:
         logger.error("Callback backend selected but no callback configured")
         return False
+    # CRAB-002 fix from Tier 1 cyber scan: prevent command injection via
+    # arbitrary callback strings loaded from config JSON. Shell execution
+    # requires explicit CRAB_ALLOW_CALLBACK_SHELL=1 env var, and the
+    # callback must match an allowlist of safe command prefixes.
+    if not os.environ.get("CRAB_ALLOW_CALLBACK_SHELL"):
+        logger.error(
+            "Callback shell execution disabled (CRAB-002). "
+            "Set CRAB_ALLOW_CALLBACK_SHELL=1 to enable, and ensure "
+            "callback matches allowlist: %s",
+            _CALLBACK_ALLOWLIST,
+        )
+        return False
+    if not _is_callback_allowed(cb):
+        logger.error("Callback command not in allowlist (CRAB-002): %s", cb[:80])
+        return False
     try:
-        # Try as Python callable first (if running inside Python that has it)
-        # Otherwise as shell command
         _run_shell(["sh", "-c", cb])
         return True
     except Exception as exc:
         logger.error("Callback bus post failed: %s", exc)
         return False
+
+
+# Allowlist of safe command prefixes for callback backend (CRAB-002).
+# Add entries here when a new callback command is explicitly approved.
+_CALLBACK_ALLOWLIST: tuple[str, ...] = (
+    "python ",
+    "python3 ",
+    "python -m ",
+    "python3 -m ",
+)
+
+
+def _is_callback_allowed(cb: str) -> bool:
+    """Check if a callback string starts with an allowlisted command prefix."""
+    cb_stripped = cb.strip()
+    return any(cb_stripped.startswith(prefix) for prefix in _CALLBACK_ALLOWLIST)
 
 
 def _bus_post_stdout(config: DaemonConfig, turn: CrabTurn, message: str) -> bool:
@@ -635,6 +703,16 @@ def bus_phase(config: DaemonConfig, turn: CrabTurn) -> bool:
         logger.info("[DRY RUN] Would post: %s %s %s",
                     config.identity, turn.reason.message_type, turn.reason.rationale)
         return True
+
+    # CRAB-004 fix: validate identity against approved registry before posting.
+    if not _validate_identity(config.identity):
+        logger.error(
+            "Identity '%s' not in approved bus identity registry (CRAB-004). "
+            "Set CRAB_ALLOWED_IDENTITIES env var to add custom identities. "
+            "Approved: %s",
+            config.identity, sorted(_APPROVED_BUS_IDENTITIES),
+        )
+        return False
 
     status = "OK" if turn.act.success else "FAIL"
     actions_str = "; ".join(turn.act.actions_taken[:3])
