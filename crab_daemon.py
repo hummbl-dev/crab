@@ -647,9 +647,13 @@ def _bus_post_callback(config: DaemonConfig, turn: CrabTurn, message: str) -> bo
         logger.error("Callback backend selected but no callback configured")
         return False
     # CRAB-002 fix from Tier 1 cyber scan: prevent command injection via
-    # arbitrary callback strings loaded from config JSON. Shell execution
-    # requires explicit CRAB_ALLOW_CALLBACK_SHELL=1 env var, and the
-    # callback must match an allowlist of safe command prefixes.
+    # arbitrary callback strings loaded from config JSON. Two layers:
+    #   1. CRAB_ALLOW_CALLBACK_SHELL=1 env var must be set (fail-closed).
+    #   2. Callback must match an allowlisted command prefix AND contain no
+    #      shell metacharacters. The prior startswith-only check was bypassable
+    #      via "python -c \"os.system('rm -rf /')\"" or "python x.py; rm -rf /"
+    #      because the callback runs through sh -c. The metacharacter reject
+    #      closes that bypass.
     if not os.environ.get("CRAB_ALLOW_CALLBACK_SHELL"):
         logger.error(
             "Callback shell execution disabled (CRAB-002). "
@@ -678,11 +682,33 @@ _CALLBACK_ALLOWLIST: tuple[str, ...] = (
     "python3 -m ",
 )
 
+# Shell metacharacters that allow command chaining/substitution/injection.
+# Callbacks matching the allowlist prefix are STILL rejected if any of these
+# appear in the string, because the callback runs via sh -c. This closes the
+# bypass where "python -c \"os.system('...')\"" or "python x.py; rm -rf /"
+# passes a naive startswith check.
+_CALLBACK_FORBIDDEN_CHARS: frozenset[str] = frozenset(
+    ";|&`$(){}\n\r<>\\"
+)
+
 
 def _is_callback_allowed(cb: str) -> bool:
-    """Check if a callback string starts with an allowlisted command prefix."""
+    """Check if a callback string is safe to execute via sh -c (CRAB-002).
+
+    Two conditions must both hold:
+      1. The stripped string starts with an allowlisted command prefix.
+      2. The string contains no shell metacharacters that would allow
+         command chaining, substitution, or redirection.
+
+    The metacharacter check is what makes the allowlist meaningful — without
+    it, "python -c \"os.system('rm -rf /')\"" bypasses a startswith-only check.
+    """
     cb_stripped = cb.strip()
-    return any(cb_stripped.startswith(prefix) for prefix in _CALLBACK_ALLOWLIST)
+    if not any(cb_stripped.startswith(prefix) for prefix in _CALLBACK_ALLOWLIST):
+        return False
+    if any(ch in cb for ch in _CALLBACK_FORBIDDEN_CHARS):
+        return False
+    return True
 
 
 def _bus_post_stdout(config: DaemonConfig, turn: CrabTurn, message: str) -> bool:

