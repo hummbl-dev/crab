@@ -2,7 +2,7 @@
 
 **Status:** Hygiene guidance for the CRAB repo.
 
-This repository is currently a private incubator. It contains both the portable CRAB protocol implementation and HUMMBL-internal planning, bridge, research, and brand artifacts. A future public release should use a smaller, audited surface.
+This is the public CRAB repository. It contains the portable CRAB protocol implementation, documentation, peer reviews, and branding artifacts. The private incubator (`hummbl-dev/crab-incubator`) retains the full development history with internal planning and bridge artifacts.
 
 ## Public/core candidate
 

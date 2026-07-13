@@ -16,16 +16,16 @@
 
 ## Manual verification scans
 
-| Category | Pattern | Matches |
-|----------|---------|---------|
-| Windows paths | `C:\Users`, `C:/Users`, `/c/Users`, `/Users/`, `/home/` | 0 |
-| Internal hostnames | `Anvil`, `nodezero`, `Huxley` (case-insensitive) | 0 |
-| VPN/tailnet | `Tailscale`, `tailscale`, `tail0ff7b3` | 0 |
-| Personal names | `Reuben`, `Bowlby`, `Dan` (case-insensitive) | 0 |
-| Personal emails | `reuben@` | 0 |
-| GitHub usernames | `reubenbowlby` (case-insensitive) | 0 |
-| Port numbers | `18790`, `11434`, `8081` | 0 |
-| IP addresses | `\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}` | 0 |
+| Category | Pattern class | Matches |
+|----------|--------------|---------|
+| Windows paths | All 3 forms (backslash, forward-slash, MSYS) + Unix home paths | 0 |
+| Internal hostnames | 3 specific internal hostnames (case-insensitive) | 0 |
+| VPN/tailnet | VPN product name + tailnet identifier | 0 |
+| Personal names | Operator + collaborator names (case-insensitive) | 0 |
+| Personal emails | Personal email prefix | 0 |
+| GitHub usernames | Personal GitHub username (case-insensitive) | 0 |
+| Port numbers | 3 specific internal service ports | 0 |
+| IP addresses | IPv4 dotted-quad pattern | 0 |
 | Visibility | `visibility.*private` (case-insensitive) | 0 |
 
 ## Gitleaks report
