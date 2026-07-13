@@ -10,9 +10,9 @@
 ## Recommendation
 
 Set up Gitea as a **pull mirror** of the GitHub private repo. This gives you:
-- Local backup on Anvil (your hardware, your data)
+- Local backup on your hardware (your hardware, your data)
 - Fallback git server if GitHub is unreachable
-- Fast local clones for Anvil-only work
+- Fast local clones for local-only work
 
 ## Setup Steps
 
@@ -35,7 +35,7 @@ curl -X POST "https://<GITEA_HOST>/api/v1/user/repos" \
 
 ```bash
 # Set the GitHub repo as the remote to mirror from
-curl -X PATCH "https://<GITEA_HOST>/api/v1/repos/hummbl/crab" \
+curl -X PATCH "https://<GITEA_HOST>/api/v1/repos/hummbl-dev/crab" \
   -H "Content-Type: application/json" \
   -H "Authorization: token $GITEA_TOKEN" \
   -d '{
@@ -67,7 +67,7 @@ If Gitea's built-in mirror sync is unreliable, add a scheduled task:
 
 ```powershell
 # As Administrator
-schtasks /Create /TN "GiteaMirror-Crab" /TR "powershell -Command curl -s -H 'Authorization: token TOKEN' 'https://<GITEA_HOST>/api/v1/repos/hummbl/crab/mirror-sync'" /SC HOURLY /ST 00:00
+schtasks /Create /TN "GiteaMirror-Crab" /TR "powershell -Command curl -s -H 'Authorization: token TOKEN' 'https://<GITEA_HOST>/api/v1/repos/hummbl-dev/crab/mirror-sync'" /SC HOURLY /ST 00:00
 ```
 
 ## Policy Note
@@ -82,4 +82,4 @@ The `crab` repo fits the "Solo HUMMBL repos on Gitea" category since it is a HUM
 - [ ] Create Gitea repo via API or web UI
 - [ ] Configure mirror with GitHub PAT
 - [ ] Test sync: push to GitHub, verify Gitea reflects the commit within minutes
-- [ ] Document in this repo's README: "Gitea mirror: `https://<GITEA_HOST>/hummbl/crab`"
+- [ ] Document in this repo's README: "Gitea mirror: `https://<GITEA_HOST>/hummbl-dev/crab`"

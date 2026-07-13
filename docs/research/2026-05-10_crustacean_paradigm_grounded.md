@@ -143,7 +143,7 @@ The portable daemon is a stripped-down version of the HUMMBL internal ops platfo
 
 The key difference: Paxos requires a quorum (majority agreement). CRAB requires only that the agent reads the bus and decides for itself. CRAB is *optimistic* — it assumes coordination is possible unless evidence (BLOCKED) suggests otherwise. This is appropriate for multi-agent systems where agents trust each other (same operator, same organization) rather than Byzantine environments.
 
-**RAFT (Ongaro & Ousterhout, 2014)** simplifies Paxos with a leader-based model. The HUMMBL production system uses a RAFT-like architecture: nodezero's bus bridge (port 18790) is the leader. All agents (producers) write to it; it maintains the canonical log. Huxley and Anvil route writes through the bridge rather than maintaining local logs.
+**RAFT (Ongaro & Ousterhout, 2014)** simplifies Paxos with a leader-based model. The HUMMBL production system uses a RAFT-like architecture: a central bus bridge is the leader. All agents (producers) write to it; it maintains the canonical log. Peer hosts route writes through the bridge rather than maintaining local logs.
 
 #### 2.2.2 Event Sourcing & Write-Ahead Logging
 
@@ -319,7 +319,7 @@ The hybrid model (CRAB default + LOBSTER escalation) mirrors biological reality:
 ### Internal Documentation
 
 18. HUMMBL. (2026). *CRAB Protocol Playbook*. `founder_mode/playbooks/CRAB.md`
-19. HUMMBL. (2026). *Crab Protocol — Anvil Exception*. `~/.agents/rules/crab-protocol-anvil.md`
+19. HUMMBL. (2026). *Crab Protocol — Host-Specific Exception*. `.agents/rules/crab-protocol-anvil.md (internal fleet rule, not public)`
 20. HUMMBL. (2026). *CRAB Daemon Reference Implementation*. `hummbl-dev/crab`, commit `458f48b` (v1.0.0)
 
 ---

@@ -10,3 +10,13 @@ __pycache__/
 bus/messages.tsv
 bus/*.jsonl
 crab-daemon/
+
+# Operational state — never commit
+_state/
+
+# Secrets — never commit
+.env*
+*.pem
+*.key
+*credentials*
+*secret*

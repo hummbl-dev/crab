@@ -5,24 +5,25 @@ Polls CRAB log for Retrograde results and re-posts to founder-mode
 coordination bus with proper validation, locking, and identity registry.
 
 Usage:
-    PYTHONPATH=<USER_HOME>/PROJECTS/founder-mode python bridge_crab_fm.py
+    FM_REPO=/path/to/founder-mode python bridge_crab_fm.py
     python bridge_crab_fm.py --crab-log crab-daemon/daemon.log --once
 """
 
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import sys
 import time
 from pathlib import Path
 
-# founder_mode lives in sibling repo on Anvil
-FM_REPO = Path("<USER_HOME>/PROJECTS/founder-mode")
+# founder_mode repo path — configurable via FM_REPO env var
+FM_REPO = Path(os.environ.get("FM_REPO", "../founder-mode"))
 if str(FM_REPO) not in sys.path:
     sys.path.insert(0, str(FM_REPO))
 
-FM_BUS_PATH = (FM_REPO / "founder_mode" / "_state" / "coordination" / "messages.tsv").resolve()
+FM_BUS_PATH = Path(os.environ.get("FM_BUS_PATH", str(FM_REPO / "founder_mode" / "_state" / "coordination" / "messages.tsv"))).resolve()
 
 # Regex to extract Retrograde log lines:
 # RETROGRADE: validated=True dissonance=0.00 scuttle=False findings=...

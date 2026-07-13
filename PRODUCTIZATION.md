@@ -15,11 +15,11 @@ The `hummbl-dev/founder-mode` repo is a **production multi-agent operating syste
 | Coupling Type | Count | Examples |
 |-------------|-------|----------|
 | Machine profiles | 19 service files | Internal hostnames hardcoded as Ollama hosts, inference nodes, CI runners |
-| Tailscale IPs | 512 Python references | Internal tailnet addresses and host mappings |
+| VPN/tailnet IPs | 512 Python references | Internal tailnet addresses and host mappings |
 | Hardcoded emails | 46 | Internal personal/work emails in configs, adapters, notifications |
 | Bus paths | 36 files | `_state/coordination/messages.tsv` assumes specific repo layout |
 | Agent identities | ~40 | `claude-code`, `codex`, `gemini`, `sov`, `echo`, `soma`, `devin`, `opencode` — all HUMMBL-specific roster |
-| Windows paths | scattered | `<USER_HOME>`, `.claude/rules/`, `.agents/rules/` in guardrails and launchers |
+| Windows paths | scattered | Hardcoded user paths, `.claude/rules/`, `.agents/rules/` in guardrails and launchers |
 | External adapters | 7 live | GitHub, Google Calendar, Linear, Cost Tracker, Security, Ollama — wired to HUMMBL accounts |
 
 **The garage is not a showroom.** You cannot open-source `founder-mode` as-is without exposing your operational topology, personal infrastructure, and security surface.
@@ -50,7 +50,7 @@ The `hummbl-dev/founder-mode` repo is a **production multi-agent operating syste
 
 | Product | What It Is | Why It Matters | Blockers | Effort |
 |---------|-----------|---------------|----------|--------|
-| **Autoresearch Pipeline** | Overnight batch: intake → distill → synthesize → propagate | AI-powered research automation | Hardwired to nodezero Ollama, Dan's cron schedule, HUMMBL research topics | 4-6 weeks |
+| **Autoresearch Pipeline** | Overnight batch: intake → distill → synthesize → propagate | AI-powered research automation | Hardwired to a specific inference host, operator's cron schedule, HUMMBL research topics | 4-6 weeks |
 | **Trading Loop** | Alpaca-integrated algorithmic trading with circuit breakers | Revenue-generating subsystem | Financial logic is proprietary; infrastructure is HUMMBL-specific | **Keep internal** |
 | **Cognition Layer** | CLP (Cognitive Ledger Protocol), BM25 index, Open Brain server | Shared memory for agents | Tied to HUMMBL memory layout, embedding model choices, disk paths | 4-6 weeks |
 | **Full Agent Fleet** | 10+ agents with guardrails, personas, multi-lens synthesis (ARCANA, Base120, etc.) | The "HUMMBL OS" | Entire framework is bespoke philosophy + custom infrastructure; not a product, it's the *platform* | **Keep internal** |
@@ -95,7 +95,7 @@ HUMMBL Internal (founder-mode)
 
 1. **Complete redteam audit** — secrets, hostnames, operational details, identity leakage
 2. **Replace all hardcoded infrastructure** with configuration:
-   - Tailscale IPs → `MESH_HOSTS` env var or config JSON
+   - VPN/tailnet IPs → `MESH_HOSTS` env var or config JSON
    - Machine names → `INFERENCE_NODES` config
    - Emails → `NOTIFICATION_RECIPIENTS` config
    - Bus paths → `BUS_PATH` config with sensible default
@@ -128,7 +128,7 @@ HUMMBL Internal (founder-mode)
 
 ### Absolute Red Lines
 
-1. **NEVER leak operational topology** — Tailscale IPs, machine hostnames, network layout, VPN details
+1. **NEVER leak operational topology** — VPN/tailnet IPs, machine hostnames, network layout, VPN details
 2. **NEVER leak personal identities** — Real names, emails, home addresses, personal GitHub accounts
 3. **NEVER leak credentials or tokens** — API keys, PATs, OAuth tokens, signing secrets, even in test fixtures
 4. **NEVER make public before audit** — The `redteam` skill must run clean before any repo visibility changes

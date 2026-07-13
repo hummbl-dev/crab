@@ -2,10 +2,10 @@
 
 ## Identity
 
-- **Repository**: `HUMMBL/crab`
+- **Repository**: `hummbl-dev/crab`
 - **Canonical host**: `https://github.com/hummbl-dev/crab`
-- **Gitea mirror**: `https://<GITEA_HOST>/HUMMBL/crab`
-- **Visibility**: Private/incubator upstream; Anvil Gitea mirror is tailnet-local.
+- **Gitea mirror**: `https://<GITEA_HOST>/hummbl-dev/crab`
+- **Visibility**: Private/incubator upstream; Gitea mirror is local-only.
 - **Default branch**: `main`
 - **Owner**: HUMMBL
 
@@ -17,7 +17,7 @@
 ## Canonical Relationship
 
 - Source-of-truth for CRAB runtime and protocol docs is GitHub (`hummbl-dev/crab`).
-- Gitea (`HUMMBL/crab`) is a pull mirror for Anvil-local visibility and continuity.
+- Gitea (`hummbl-dev/crab`) is a pull mirror for local-only visibility and continuity.
 - Do not open Gitea-only PRs for CRAB runtime or protocol docs while the repo is configured as a mirror.
 
 ## Validation Contract

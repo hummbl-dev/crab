@@ -3,6 +3,11 @@
 **Date:** 2026-05-11
 **Status:** Gap analysis complete — bridge spec needed for cross-machine demo
 
+> **Historical note (2026-07-12):** The bridge described in Option B has been
+> implemented as `bridge_crab_fm.py`. It uses `FM_REPO` and `FM_BUS_PATH`
+> environment variables for path configuration. This document is retained as
+> the original gap analysis that motivated the bridge.
+
 ---
 
 ## Format Comparison
@@ -58,7 +63,7 @@
 # In CRAB config
 "bus": {
     "backend": "tsv",
-    "path": "../founder-mode/founder_mode/_state/coordination/messages.tsv",
+    "path": "<FOUNDER_MODE_BUS_PATH>",
     "format": "founder_mode"  # new: emit 5-column TSV
 }
 ```
@@ -98,4 +103,4 @@ Implement **Option B** (bridge agent) as a 30-line script. It:
 
 ## Demo Narrative
 
-> "CRAB runs on Anvil. It prunes stale branches, validates its own work with Retrograde, and posts a receipt. The bridge agent picks up that receipt and posts it to the founder-mode coordination bus on nodezero. Now the fleet health dashboard shows CRAB's dissonance score alongside every other agent's status."
+> "CRAB runs on a host. It prunes stale branches, validates its own work with Retrograde, and posts a receipt. The bridge agent picks up that receipt and posts it to the founder-mode coordination bus on the bus authority host. Now the fleet health dashboard shows CRAB's dissonance score alongside every other agent's status."

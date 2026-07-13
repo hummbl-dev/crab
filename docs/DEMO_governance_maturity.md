@@ -1,13 +1,16 @@
 # Governance Maturity Demo Script
 ## CRAB + HUMMBL Primitives — 5 Minutes
 
+> **Note (2026-07-12):** Commands below have been updated from `uv run` to
+> `python` / `python -m pytest` for portability. The demo flow is unchanged.
+
 ---
 
 ## Setup (30 seconds)
 
 ```bash
 cd PROJECTS/crab
-uv run pytest tests/test_daemon.py::TestRetrogradePhase -v
+python -m pytest tests/test_daemon.py::TestRetrogradePhase -v
 ```
 
 Expected: 6/6 tests pass in ~2 seconds.
@@ -19,7 +22,7 @@ Expected: 6/6 tests pass in ~2 seconds.
 ### 1. The Forward Pass (30 seconds)
 
 ```bash
-uv run crab_daemon.py --once --lane cleanup --dry-run
+python crab_daemon.py --once --lane cleanup --dry-run
 ```
 
 Show the 4-phase output:
@@ -39,7 +42,7 @@ BUS: posted=True
 Run the same command **without** `--dry-run` (on a test repo):
 
 ```bash
-uv run crab_daemon.py --once --lane cleanup --config test-config.json
+python crab_daemon.py --once --lane cleanup --config test-config.json
 ```
 
 Show the 5th phase:
@@ -65,7 +68,7 @@ def test_retrograde_cleanup_orphaned_prune():
 
 Run it:
 ```bash
-uv run pytest tests/test_daemon.py::TestRetrogradePhase::test_retrograde_cleanup_orphaned_prune -v
+python -m pytest tests/test_daemon.py::TestRetrogradePhase::test_retrograde_cleanup_orphaned_prune -v
 ```
 
 Show output:

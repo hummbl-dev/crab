@@ -39,7 +39,7 @@ For non-git work, replace these with the equivalent live-state checks:
 - Incident channel tail.
 - CI or monitor state.
 
-Keep CRAWL implementation-neutral. Mesh, SSH, Tailscale, host process, and disk
+Keep CRAWL implementation-neutral. Mesh, SSH, VPN, host process, and disk
 probes belong in local profiles only when those sources can change the next
 safe action and the worker has authority to read them.
 

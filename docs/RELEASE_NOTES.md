@@ -23,5 +23,5 @@ The reference daemon includes Retrograde validation behavior, but Retrograde is
 not promoted to a required public protocol phase in this draft. Any future
 five-phase public protocol requires a separate release decision.
 
-Founder-mode or Anvil guardrail changes are out of scope for this CRAB repo
+Founder-mode or host-specific guardrail changes are out of scope for this CRAB repo
 draft and require explicit operator/steward approval.

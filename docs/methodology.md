@@ -9,6 +9,14 @@ CRAB is a four-step execution loop for coordinated work:
 It is designed for environments where multiple agents, humans, or automation
 surfaces can modify shared state.
 
+CRAWL expands the first phase ("Check") into five live-state probes that every
+consequential turn should consider: **C**ontext (what the requester asked and
+recent coordination state), **R**epo (branch/worktree/stash/PR/CI state),
+**A**gents (who is active, blocked, or owns dirty work), **W**ire (is the
+coordination substrate current), and **L**imits (stop conditions, protected
+surfaces, credentials). `Check` remains the short-form implementation name;
+`CRAWL` is the expanded human-facing label for the same phase.
+
 ## Goals
 
 - Prevent stale-context execution.
@@ -114,3 +122,29 @@ Good CRAB execution is:
 - **Auditable**: leaves a receipt another worker can use.
 - **Honest**: distinguishes verified facts from assumptions.
 - **Timely**: posts the receipt before final response or handoff.
+
+## Operational Notes
+
+### Preserving unrelated dirty work
+
+If CRAWL/Check discovers dirty worktree state, stashes, or in-progress work
+that is unrelated to the current lane, the worker must not touch it. Stash,
+branch, or worktree state belonging to another agent or session should be
+preserved as-is. Post a `BLOCKED` message if the unrelated dirty state
+prevents safe progress.
+
+### Shadow bus prohibition
+
+When a canonical coordination bus exists, workers must post receipts to that
+bus — not to a local shadow copy that diverges from the canonical surface.
+Local-only bus writes are permitted only when no shared coordination surface
+exists and the host-specific local-only exception conditions are met.
+
+### WIP_START / WIP_END pairing
+
+`WIP_START` and `WIP_END` messages must be paired. A worker that posts
+`WIP_START` to claim a lane is responsible for posting `WIP_END` when it
+releases that lane — whether the work completed successfully, was blocked,
+or was abandoned. Unpaired `WIP_START` messages create stale ownership that
+blocks other workers. If a worker crashes or loses context, the next CRAWL
+should detect the orphaned `WIP_START` and post a corrective `WIP_END`.

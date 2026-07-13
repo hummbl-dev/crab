@@ -48,7 +48,7 @@
 
 | Tool | Result |
 |------|--------|
-| Bandit | Not available on this host (LibreOffice python conflict). Recommend running on Huxley/nodezero before public release. |
+| Bandit | Not available on this host (LibreOffice python conflict). Recommend running on a host with bandit installed before public release. |
 | Semgrep | Not available on this host. Recommend running before public release. |
 | Manual review | **CLEAN** — no `eval`, `exec`, `compile`, `pickle`, `yaml.load`, or other deserialization risks. |
 
@@ -80,3 +80,44 @@
 ## Next action
 
 The portable daemon is **clean for commit to the private repo**. The two LOW findings are documentation/operational, not code defects. Run formal bandit/semgrep and a repo-wide public/private split audit before any public release.
+
+---
+
+## 2026-06-25 Cyber Deep Scan — Follow-up
+
+A follow-up cyber deep scan identified 14 findings across the repository.
+Summary:
+
+### High (3) — Fixed in PR #17
+
+1. **Hardcoded infrastructure paths in bridge module** — `bridge_crab_fm.py`
+   contained hardcoded Windows paths to the founder-mode repo. Replaced with
+   `FM_REPO` / `FM_BUS_PATH` environment variables with sensible defaults.
+2. **Hardcoded global bus script path** — `bus/crab_bus.py` contained a
+   hardcoded path to a bus-global script. Replaced with `BUS_GLOBAL_SCRIPT`
+   env var; returns `False` when unset.
+3. **Internal hostnames in docs** — Multiple docs referenced internal fleet
+   hostnames (Anvil, nodezero, Huxley) and Tailscale. Replaced with generic
+   terms ("a host", "bus authority host", "peer hosts", "VPN/tailnet").
+
+### Medium (9) — Open
+
+4. TSV backend lacks file locking (documented; `flock`/`msvcrt` not yet added).
+5. Callback backend uses `sh -c` (documented as unsafe for untrusted config).
+6. No HMAC signing in portable daemon (deferred to `hummbl-governance`).
+7. No identity validation in portable daemon (deferred).
+8. No concurrent-writer test for TSV backend.
+9. No corruption-recovery test for bus files.
+10. No config schema migration test.
+11. Scuttlebutt layer is prototype-only with no concurrency safety.
+12. Productization timeline estimates are 2–3× optimistic per technical review.
+
+### Low (2) — Accepted
+
+13. No `os.environ.get` guard test for future revisions (recommend adding).
+14. No CONTRIBUTING.md note about committing hostnames/IPs/tokens (recommend
+    adding).
+
+**Next action:** Address Medium findings 4–6 before public release. Run
+bandit and semgrep on a host with those tools installed. Complete the
+repo-wide public/private split audit.

@@ -13,7 +13,7 @@ Keep CRAB as the parent protocol:
 
 > **CRAB = CRAWL/Check -> Reason -> Act -> Bus**
 
-The change is not a rename of the whole protocol. It is a precision upgrade to Step 1. "Check" is semantically broad in the existing docs, but the required discovery surface is scattered across methodology, implementation, bus, Anvil, and founder-mode guidance. "CRAWL" makes the first phase explicitly memorable enough to cover context, repo state, agent ownership, wire/mesh state, and operational limits.
+The change is not a rename of the whole protocol. It is a precision upgrade to Step 1. "Check" is semantically broad in the existing docs, but the required discovery surface is scattered across methodology, implementation, bus, host-specific, and founder-mode guidance. "CRAWL" makes the first phase explicitly memorable enough to cover context, repo state, agent ownership, wire/mesh state, and operational limits.
 
 This is additive and backward-compatible:
 
@@ -26,7 +26,7 @@ This is additive and backward-compatible:
 
 ## Evidence Reviewed
 
-Primary CRAB repo (`hummbl-dev/crab`, local checkout `<USER_HOME>\PROJECTS\crab`):
+Primary CRAB repo (`hummbl-dev/crab`, local checkout `<WORK_SURFACE>`):
 
 - `README.md` defines CRAB as "Check -> Reason -> Act -> Bus" and advertises a four-step protocol.
 - `docs/methodology.md` defines Step 1 as "Check" and lists minimum git-backed checks: repository/workspace, branch, dirty worktree, stash, recent coordination messages, blockers/proposals.
@@ -39,14 +39,14 @@ Primary CRAB repo (`hummbl-dev/crab`, local checkout `<USER_HOME>\PROJECTS\crab`
 
 Founder-mode / machine-local CRAB surfaces:
 
-- `founder_mode/playbooks/CRAB.md` requires branch, stash, and bus tail before acting, with Anvil-specific bus-global commands.
-- `.claude/rules/crab-protocol.md` adds CWD verification, unresolved proposal reading, verify-before-claim, and Anvil/Codex command forms.
+- `founder_mode/playbooks/CRAB.md` requires branch, stash, and bus tail before acting, with host-specific bus-global commands.
+- `.claude/rules/crab-protocol.md` adds CWD verification, unresolved proposal reading, verify-before-claim, and host-specific command forms.
 - `.claude/rules/crab-protocol-anvil.md` preserves Bus as mandatory for shared state but allows a narrow local-only exception.
-- Machine-global Anvil guidance adds mesh surfaces: nodezero as bus authority, Huxley as a peer host, Tailscale/SSH reachability, and no local Anvil bus fallback.
+- Machine-global guidance adds mesh surfaces: a bus authority host, peer hosts, mesh/VPN reachability, and no local bus fallback.
 
 Observed live trigger for this proposal:
 
-- On 2026-05-13, the label "Check" did not naturally pull agents toward the full discovery surface needed for coordination. The useful preflight had to include active work surface, branch/stash/status, canonical bus status/tail, Tailscale reachability, SSH peer probes, process inventory, disk pressure, dirty worktree ownership, and active Codex/Huxley role assignment.
+- On 2026-05-13, the label "Check" did not naturally pull agents toward the full discovery surface needed for coordination. The useful preflight had to include active work surface, branch/stash/status, canonical bus status/tail, mesh/VPN reachability, SSH peer probes, process inventory, disk pressure, dirty worktree ownership, and active peer agent role assignment.
 
 ---
 
@@ -60,7 +60,7 @@ The existing CRAB docs already allow broad live-state discovery, including block
 - Is this the correct checkout or just a launch directory?
 - Are other agents active, exhausted, or claiming ownership?
 - Is the bus canonical path healthy or a stale mirror?
-- Is there a mesh/SSH/Tailscale problem?
+- Is there a mesh/SSH/VPN problem?
 - Are host limits, disk pressure, usage caps, or protected surfaces relevant?
 - Did a human assign a temporary leadership or coordination role?
 
@@ -85,7 +85,7 @@ Define CRAWL as:
 | **C** | Context | What is the operator asking, what role/authority was assigned, and what prior bus state changes the prompt? |
 | **R** | Repo | What branch/worktree/stash/PR/CI state can invalidate the requested work? |
 | **A** | Agents | Which humans, agents, sessions, lanes, or daemons are active, blocked, exhausted, or owners of dirty work? |
-| **W** | Wire | Is the coordination substrate current: bus, mirror, SSH, Tailscale, bridge, queue, issue tracker, or PR comments? |
+| **W** | Wire | Is the coordination substrate current: bus, mirror, SSH, VPN, bridge, queue, issue tracker, or PR comments? |
 | **L** | Limits | What stop conditions, disk pressure, usage caps, protected surfaces, credentials, permissions, or irreversible actions constrain the next step? |
 
 Canonical v1.1 protocol line:
@@ -142,18 +142,18 @@ CRAWL fields covered: Context, Repo, Agents, Wire, Limits.
 
 ### Profile 3: HUMMBL Mesh
 
-For Anvil/nodezero/Huxley work:
+For host-specific mesh work:
 
 ```powershell
 git -C <WORK_SURFACE> branch --show-current
 git -C <WORK_SURFACE> status --short --branch
 git -C <WORK_SURFACE> stash list
-<USER_HOME>\bin\python.cmd <USER_HOME>\bin\bus-global.py tail 5
-<USER_HOME>\bin\python.cmd <USER_HOME>\bin\bus-global.py status
-tailscale status
+<FOUNDER_MODE_REPO>\bin\python.cmd <FOUNDER_MODE_REPO>\bin\bus-global.py tail 5
+<FOUNDER_MODE_REPO>\bin\python.cmd <FOUNDER_MODE_REPO>\bin\bus-global.py status
+<MESH_STATUS>
 ```
 
-Use `<USER_HOME>\PROJECTS\founder-mode` only when founder-mode is the actual work surface or bus authority context. For CRAB repo work, `<WORK_SURFACE>` is `<USER_HOME>\PROJECTS\crab`. Add SSH/process/disk probes only when cross-machine ownership or host health can change the action.
+Use `<FOUNDER_MODE_REPO>` only when founder-mode is the actual work surface or bus authority context. For CRAB repo work, `<WORK_SURFACE>` is the CRAB repo path. Add SSH/process/disk probes only when cross-machine ownership or host health can change the action.
 
 ---
 
@@ -235,7 +235,7 @@ Before any public adoption beyond this proposal:
 - Add a v1.1 release note or changelog entry that states CRAWL/Check is a terminology and documentation update, not an API rename.
 - Keep `CheckResult` and `check_phase()` stable.
 - State that CRAB v1.1 remains a four-step public protocol while the reference daemon's Retrograde behavior is an implementation extension.
-- Require explicit operator/steward approval before changing founder-mode or Anvil operating guardrails.
+- Require explicit operator/steward approval before changing founder-mode or host-specific operating guardrails.
 - Keep HUMMBL mesh commands out of core OSS docs; put them in source notes or founder-mode-specific guidance.
 
 ### Phase 5: Bus Receipt Shape
@@ -278,11 +278,11 @@ Daemon:
 
 HUMMBL/founder-mode:
 
-- The Anvil CRAB rule can be updated to say "CRAWL" while preserving current bus-global commands.
-- CRAWL does not weaken the Anvil local-only bus exception.
+- The host-specific CRAB rule can be updated to say "CRAWL" while preserving current bus-global commands.
+- CRAWL does not weaken the host-specific local-only bus exception.
 - Mesh CRAWL includes canonical bus status and avoids local shadow bus writes.
-- Limits explicitly include a `bus-required` vs. `local-only-eligible` determination using the Anvil exception's five conditions.
-- Founder-mode/Anvil guardrail edits require explicit operator/steward approval and must not be bundled into the OSS docs-only pass.
+- Limits explicitly include a `bus-required` vs. `local-only-eligible` determination using the host-specific exception's five conditions.
+- Founder-mode/host-specific guardrail edits require explicit operator/steward approval and must not be bundled into the OSS docs-only pass.
 
 ---
 

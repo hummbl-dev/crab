@@ -11,7 +11,7 @@ CRAB is a lightweight coordination protocol for multi-agent systems:
 
 > **CRAWL/Check → Reason → Act → Bus**
 
-Every autonomous turn reads live state, decides whether to act, performs the work, and posts a receipt to a coordination bus. No more waking up wondering what your agents did overnight.
+Every consequential autonomous turn reads live state, decides whether to act, performs the work, and posts a receipt to a coordination bus. `Check` is the short-form first step; `CRAWL` is the expanded live-state method: Context, Repo, Agents, Wire, Limits. No more waking up wondering what your agents did overnight.
 
 [Landing Page](docs/index.html) · [Docs](docs/methodology.md) · [Examples](examples/) · [Issues](https://github.com/hummbl-dev/crab/issues)
 

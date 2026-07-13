@@ -8,6 +8,7 @@ Stdlib only. Bridges to global bus for STATUS/DECISION/BLOCKED/HANDOFF types.
 from __future__ import annotations
 
 import argparse
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -43,11 +44,14 @@ def read_bus(limit: int = 50) -> list[list[str]]:
 
 def write_global(from_: str, to: str, type_: str, message: str) -> bool:
     """Bridge to the founder-mode global coordination bus."""
+    script = os.environ.get("BUS_GLOBAL_SCRIPT")
+    if not script:
+        return False
     try:
         subprocess.run(
             [
                 sys.executable,
-                "<USER_HOME>/bin/bus-global.py",
+                script,
                 "post", from_, to, type_, message,
             ],
             check=False,

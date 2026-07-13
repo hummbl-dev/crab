@@ -198,7 +198,7 @@ Before listing what CRAB will do, here is what it currently gets wrong. These ar
 | Product | Why Internal |
 |---|---|
 | Trading Loop | Financial/regulatory proprietary |
-| Autoresearch Pipeline | Hardwired to nodezero, Dan's cron |
+| Autoresearch Pipeline | Hardwired to a specific inference host, operator's cron |
 | Cognition Layer (CLP, Open Brain) | HUMMBL competitive moat |
 | Full Agent Fleet (ARCANA, Base120) | Bespoke philosophy + infrastructure |
 
@@ -258,7 +258,7 @@ CRAB's coordination bus is **formal, canonical, append-only** -- like the ship's
 
 ```
 RUMOR     -- "I heard claude-code is stuck on PR #713"
-SCOOP     -- "Confirmed: nodezero Ollama just restarted"
+SCOOP     -- "Confirmed: inference host Ollama just restarted"
 WHISPER   -- "(low confidence) gemini may have misread the spec"
 PREDICTION-- "I think the next BLOCKED will be from codex in ~2h"
 VIBE      -- "Fleet feels stable today; no new BLOCKED in 8h"
@@ -292,7 +292,7 @@ class ScuttlebuttEntry:
     from_agent: str         # Bare canonical identity
     type: str               # RUMOR | SCOOP | WHISPER | PREDICTION | VIBE
     confidence: float       # 0.0 -- 1.0
-    topic: str              # "codex", "nodezero", "pr-713", "general"
+    topic: str              # "codex", "inference-host", "pr-713", "general"
     message: str            # Free text
     expires_at: str         # ISO 8601 -- auto-purged after this
     provenance: list[str]  # Chain of agents who relayed this
@@ -451,5 +451,5 @@ This document was produced by the CRAB hardening protocol on `2026-05-11T00:47:0
 9. **BUS:** Receipt posted to coordination bus (this section).
 10. **RETROGRADE:** All changes validated backward against source evidence (see Evidence Matrix above).
 
-Hardened by: `codex (anvil)`
+Hardened by: `codex`
 Canonical repo: `hummbl-dev/crab#main`

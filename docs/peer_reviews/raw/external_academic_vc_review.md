@@ -2,7 +2,7 @@
 EXTERNAL PEER REVIEW: CRAB Unified Roadmap v2.0
 Reviewer: Skeptical Academic / VC Due Diligence Analyst (Cold Read)
 Date: 2026-05-11
-Document Under Review: <USER_HOME>\PROJECTS\crab\docs\UNIFIED_ROADMAP.md
+Document Under Review: docs/UNIFIED_ROADMAP.md
 Supporting Documents Read:
   - docs/research/2026-05-10_crustacean_paradigm_grounded.md (332 lines)
   - docs/research/2026-05-11_crab_canon_symmetrical_runtime.md (444 lines)

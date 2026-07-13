@@ -47,8 +47,6 @@ Keep these private or move them under an internal namespace before any public re
 - `docs/UNIFIED_ROADMAP.md`.
 - `docs/peer_reviews/*`.
 - `docs/research/*`, until citation and evidence hardening is complete.
-- `docs/ai-notary-*`.
-- `docs/universal-jv-outreach-framework.md`.
 - `docs/branding/*`, unless intentionally released as a brand/artpack package.
 - `_state/` handoffs.
 - Runtime state such as `crab-daemon/config.json`, logs, turns, and local bus messages.
@@ -61,3 +59,12 @@ Keep these private or move them under an internal namespace before any public re
 4. Avoid `git-filter-repo` unless history preservation is more important than leakage risk.
 
 No file movement is implied by this document. It records the boundary so future cleanup can be deliberate and operator-gated.
+
+## Relocated artifacts (2026-07-12)
+
+The following artifacts were previously tracked in this repo and have been
+removed from the public tree. They are retained in internal/private storage:
+
+- `docs/ai-notary-*` — notary framework docs; moved to internal-only storage.
+- `docs/universal-jv-outreach-framework.md` — JV outreach framework; moved to
+  internal-only storage.
