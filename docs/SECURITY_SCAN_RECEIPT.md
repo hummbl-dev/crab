@@ -1,11 +1,14 @@
-# Security Scan Receipt — v1.0.0
+# Security Scan Receipt — v1.0.1
 
 **Date:** 2026-07-13
-**Scanner:** Gitleaks 8.x
-**Scope:** Full working tree (68 files, ~906 KB)
+**Scanner:** Gitleaks 8.30.1
+**Command:** `gitleaks detect --source . --no-git --report-format json --report-path docs/gitleaks-v1.0.1.json`
+**Scope:** Full working tree, 70 tracked files, ~909 KB
+**Scan base:** v1.0.0 (`6138eda`) — the initial public release commit
+**Patch:** v1.0.1 post-release governance patch (CODEOWNERS, AUDIT.md, this receipt)
 **Result:** 0 findings
 
-## Patterns scanned
+## Patterns scanned (Gitleaks built-in rules)
 
 - API keys (AWS, GitHub, Google, Slack, Stripe, etc.)
 - Generic high-entropy secrets
@@ -30,7 +33,9 @@
 
 ## Gitleaks report
 
-See `gitleaks-v1.0.0.json` (empty array = no findings).
+- File: `docs/gitleaks-v1.0.1.json`
+- Content: `[]` (empty array = no findings)
+- Checksum (SHA-256): `37517E5F3DC66819F61F5A7BB8ACE1921282415F10551D2DEFA5C3EB0985B570`
 
 ## Notes
 
@@ -38,3 +43,5 @@ See `gitleaks-v1.0.0.json` (empty array = no findings).
 - The private incubator repo (`hummbl-dev/crab-incubator`) retains the full development history.
 - All paths in code are configured via environment variables (`FM_REPO`, `BUS_GLOBAL_SCRIPT`).
 - No hardcoded infrastructure references remain.
+- v1.0.0 tag preserved at commit `6138eda` (initial public release).
+- v1.0.1 is a post-release governance patch (CODEOWNERS fix, AUDIT.md historical language, scan receipt refresh). No code changes.
