@@ -1,0 +1,60 @@
+-----------------------------------------------------------------------------
+  HUMMBL RESEARCH INSTITUTE + CRAB BRAND WORKGROUP PRESENT:
+-----------------------------------------------------------------------------
+
+  TERMINAL CORE BRAND PACK 001
+  RELEASE DATE: 2026-05-10
+  PLATFORM: ANSI TERMINAL / TUI / ASCII ART
+  REQUIREMENTS: VT100+ OR MODERN TERMINAL EMULATOR
+
+-----------------------------------------------------------------------------
+  CONTENTS OF THIS PACK:
+-----------------------------------------------------------------------------
+
+  * CANONICAL CRAB MASCOT ........ 4 SIZES (TINY/SMALL/MEDIUM/LARGE)
+  * BERNARD THE HUMMINGBIRD ...... 3 SIZES, 6 EXPRESSIONS
+  * SCUT COMPANION ............... 14 EXPRESSIONS, ANSI-COLORED
+  * ANSI LOGO SET ................ SPLASH + WORDMARK + INLINE
+  * TUI CHROME ................... BORDERS, BOXES, PILLS, BARS
+  * TERMINAL CORE DEMO ........... SELF-CONTAINED PYTHON RENDERER
+  * DESIGN SYSTEM SPEC ........... 478-LINE CANONICAL REFERENCE
+  * ART TOOLKIT .................. 520-LINE PRODUCTION GUIDE
+
+-----------------------------------------------------------------------------
+  DESIGN PHILOSOPHY:
+-----------------------------------------------------------------------------
+
+  NEO-ANSI REVIVAL. INVERSE CORPORATE MEMPHIS. WARM BRUTALISM.
+  NOT RETRO-INSPIRED. RETRO-NATIVE. CRAFT, NOT AESTHETIC.
+
+-----------------------------------------------------------------------------
+  TECHNICAL NOTES:
+-----------------------------------------------------------------------------
+
+  - ZERO THIRD-PARTY DEPENDENCIES
+  - PYTHON 3.11+ STDLIB-ONLY RENDERER
+  - 256-COLOR ANSI WITH 16-COLOR FALLBACK
+  - UTF-8 BOX-DRAWING OR ASCII FALLBACK
+  - ALL ART VECTOR-READY (CHARACTER-DENSITY BASED)
+
+-----------------------------------------------------------------------------
+  USAGE:
+-----------------------------------------------------------------------------
+
+  cat docs/branding/assets/crab_canonical.txt
+  cat docs/branding/assets/bernard_canonical.txt
+  cat docs/branding/assets/scut_expressions.txt
+  python docs/branding/assets/terminal_core_demo.py --auto-advance
+
+-----------------------------------------------------------------------------
+  CREATED BY:
+-----------------------------------------------------------------------------
+
+  CRAB BRAND WORKGROUP
+  HUMMBL RESEARCH INSTITUTE
+  COORDINATION PROTOCOL: CRAB / CHECK->REASON->ACT->BUS
+
+-----------------------------------------------------------------------------
+  LICENSE: APACHE-2.0
+  REPO:   HTTPS://GITHUB.COM/HUMMBL-DEV/CRAB
+-----------------------------------------------------------------------------

@@ -1,0 +1,22 @@
+# OS/editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+
+__pycache__/
+
+# CRAB runtime artifacts
+bus/messages.tsv
+bus/*.jsonl
+crab-daemon/
+
+# Operational state — never commit
+_state/
+
+# Secrets — never commit
+.env*
+*.pem
+*.key
+*credentials*
+*secret*

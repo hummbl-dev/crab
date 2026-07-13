@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRAB — Coordination Receipts for Agent Behavior</title>
+  <style>
+    :root {
+      --bg: #0b0f0c;
+      --bg-1: #121a16;
+      --bg-2: #1e2a22;
+      --fg: #e8e6de;
+      --fg-dim: #8a8c84;
+      --brand: #3faa6b;
+      --brand-dk: #1f5f3f;
+      --caution: #e8a33a;
+      --emergency: #e24c3d;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-font-smoothing: antialiased; }
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+    }
+    a { color: var(--brand); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code, pre {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 0.9em;
+    }
+    pre {
+      background: var(--bg-1);
+      border: 1px solid var(--bg-2);
+      padding: 1rem;
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+    code { color: var(--brand); }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 6rem 1rem 4rem;
+      border-bottom: 1px solid var(--bg-2);
+    }
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin: 0 0 0.5rem;
+      letter-spacing: -0.02em;
+    }
+    .hero h1 span { color: var(--brand); }
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--fg-dim);
+      max-width: 600px;
+      margin: 0 auto 2rem;
+    }
+    .hero .tagline {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border: 1px solid var(--bg-2);
+      border-radius: 999px;
+      font-size: 0.875rem;
+      color: var(--fg-dim);
+      margin-bottom: 1.5rem;
+    }
+    .hero .cta {
+      display: inline-flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: opacity 0.2s;
+    }
+    .btn:hover { opacity: 0.9; text-decoration: none; }
+    .btn-primary { background: var(--brand); color: var(--bg); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--fg);
+      border: 1px solid var(--bg-2);
+    }
+    .btn-secondary:hover { border-color: var(--brand); }
+
+    /* Sections */
+    section {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 4rem 1rem;
+    }
+    h2 {
+      font-size: 1.75rem;
+      margin: 0 0 1rem;
+      color: var(--fg);
+    }
+    h3 {
+      font-size: 1.1rem;
+      margin: 2rem 0 0.5rem;
+      color: var(--brand);
+    }
+    p { color: var(--fg-dim); margin: 0 0 1rem; }
+
+    /* Protocol steps */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .step {
+      background: var(--bg-1);
+      border: 1px solid var(--bg-2);
+      border-radius: 8px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+    }
+    .step .letter {
+      display: inline-block;
+      width: 2.5rem;
+      height: 2.5rem;
+      line-height: 2.5rem;
+      border-radius: 50%;
+      background: var(--brand-dk);
+      color: var(--brand);
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+    }
+    .step h4 { margin: 0 0 0.25rem; font-size: 1rem; }
+    .step p { margin: 0; font-size: 0.875rem; color: var(--fg-dim); }
+
+    /* Features */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    .feature {
+      background: var(--bg-1);
+      border: 1px solid var(--bg-2);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+    .feature h4 { margin: 0 0 0.5rem; font-size: 1rem; }
+    .feature p { margin: 0; font-size: 0.875rem; }
+
+    /* Terminal */
+    .terminal {
+      background: #000;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    .terminal .prompt { color: var(--brand); }
+    .terminal .cmd { color: var(--fg); }
+    .terminal .output { color: var(--fg-dim); }
+    .terminal .comment { color: #55574f; }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 3rem 1rem;
+      border-top: 1px solid var(--bg-2);
+      color: var(--fg-dim);
+      font-size: 0.875rem;
+    }
+
+    @media (max-width: 640px) {
+      .hero h1 { font-size: 2.5rem; }
+      .steps { grid-template-columns: repeat(2, 1fr); }
+      .features { grid-template-columns: 1fr; }
+    }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="hero">
+    <div class="tagline">v1.0.0 &mdash; stdlib-only &mdash; Apache-2.0</div>
+    <h1><span>&#9673;</span> CRAB</h1>
+    <p>Coordination Receipts for Agent Behavior. A 4-step protocol that makes autonomous agents observable, accountable, and safe.</p>
+    <div class="cta">
+      <a href="https://github.com/hummbl-dev/crab" class="btn btn-primary">View on GitHub</a>
+      <a href="#install" class="btn btn-secondary">Get Started</a>
+    </div>
+  </div>
+
+  <section>
+    <h2>The Problem</h2>
+    <p>You're running multiple AI agents. They work while you sleep. But when you wake up, you have no idea what happened. Did they conflict? Did they fail silently? Did one overwrite another's work?</p>
+    <p><strong>CRAB fixes this.</strong> Every agent turn leaves a receipt on a coordination bus. You can replay any session, audit any decision, and know exactly what happened while you were away.</p>
+  </section>
+
+  <section>
+    <h2>The Protocol</h2>
+    <p>Every autonomous turn follows four steps. Each step produces structured output. The final step posts a receipt to the bus.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="letter">C</div>
+        <h4>Check</h4>
+        <p>Read live state: git branch, dirty files, stashes, bus tail, blockers</p>
+      </div>
+      <div class="step">
+        <div class="letter">R</div>
+        <h4>Reason</h4>
+        <p>Decide if action is needed, choose lane, pick message type, record rationale</p>
+      </div>
+      <div class="step">
+        <div class="letter">A</div>
+        <h4>Act</h4>
+        <p>Perform work: cleanup stale branches, audit the bus, run a lane handler</p>
+      </div>
+      <div class="step">
+        <div class="letter">B</div>
+        <h4>Bus</h4>
+        <p>Post a receipt: timestamp, identity, type, actions taken, success/failure</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="install">
+    <h2>Install & Run</h2>
+    <p>Zero dependencies. Copy one file, run one command.</p>
+    <div class="terminal">
+      <span class="prompt">$</span> <span class="cmd">git clone https://github.com/hummbl-dev/crab.git</span><br>
+      <span class="prompt">$</span> <span class="cmd">cd crab</span><br>
+      <span class="prompt">$</span> <span class="cmd">python crab_daemon.py --init</span><br>
+      <span class="output">Default config written to: crab-daemon/config.json</span><br>
+      <span class="prompt">$</span> <span class="cmd">python crab_daemon.py --once --verbose</span><br>
+      <span class="output">=== CRAB turn: cleanup ===</span><br>
+      <span class="output">CHECK: branch=main dirty=False stashes=0 blockers=0</span><br>
+      <span class="output">REASON: should_act=True type=STATUS rationale=Lane cleanup ready</span><br>
+      <span class="output">ACT: success=True actions=2 errors=0</span><br>
+      <span class="output">BUS: posted=True</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>Features</h2>
+    <div class="features">
+      <div class="feature">
+        <h4>Pluggable Bus</h4>
+        <p>TSV, JSONL, stdout, or custom callback. Write to files, webhooks, databases, or Slack without touching the core.</p>
+      </div>
+      <div class="feature">
+        <h4>Multi-Lane</h4>
+        <p>Run independent work streams on different schedules. Cleanup every hour, audit every 10 minutes, custom lanes as needed.</p>
+      </div>
+      <div class="feature">
+        <h4>Zero Dependencies</h4>
+        <p>Python 3.8+ and the standard library. No pip install, no version conflicts, no supply chain risk.</p>
+      </div>
+      <div class="feature">
+        <h4>Observable</h4>
+        <p>Every turn produces a receipt. Replay any session. Know who did what, when, and why.</p>
+      </div>
+      <div class="feature">
+        <h4>Safe by Default</h4>
+        <p>Blockers stop lanes. Stashes pause sensitive work. Dry-run mode simulates without mutating state.</p>
+      </div>
+      <div class="feature">
+        <h4>Container Ready</h4>
+        <p>Single-file daemon. Drop into Docker, Kubernetes, or systemd with zero config.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Bus Backends</h2>
+    <p>Choose where receipts go. Switch backends without changing your lanes.</p>
+    <pre><code>{
+  "bus": {
+    "backend": "tsv",           // tsv | jsonl | stdout | callback
+    "path": "bus/messages.tsv"  // file path for tsv/jsonl
+  }
+}</code></pre>
+    <h3>TSV (default)</h3>
+    <p>Append-only tab-separated log. Human-readable, grep-friendly, works with any Unix tool.</p>
+    <h3>JSONL</h3>
+    <p>Structured JSON Lines output. Easy to parse programmatically, query with jq, or load into databases.</p>
+    <h3>Stdout</h3>
+    <p>Print receipts to stdout. Perfect for containers, systemd, or watching in real time.</p>
+    <h3>Callback</h3>
+    <p>Run a shell command after every turn. Send to Slack, trigger CI, update a dashboard, or call any webhook.</p>
+  </section>
+
+  <section>
+    <h2>Use Cases</h2>
+    <p><strong>Nightly agent fleet sync.</strong> Run CRAB on a scheduler. Every morning, read the bus to see what each agent did overnight.</p>
+    <p><strong>CI pipeline coordination.</strong> Use the callback backend to trigger downstream jobs only after upstream agents post success receipts.</p>
+    <p><strong>Multi-machine mesh.</strong> Mount a shared TSV file via NFS or sync it with Syncthing. Every machine appends its receipts to the same log.</p>
+    <p><strong>Audit trail for compliance.</strong> The JSONL backend produces tamper-evident logs. Every receipt includes timestamp, identity, and action taken.</p>
+  </section>
+
+  <section>
+    <h2>API Reference</h2>
+    <p>The daemon exposes a CLI and a programmatic API. Both use the same config format.</p>
+    <pre><code>python crab_daemon.py --init              # Write default config
+python crab_daemon.py --once             # Run one iteration
+python crab_daemon.py --once --dry-run   # Simulate, do not post
+python crab_daemon.py --lane cleanup     # Run only one lane
+python crab_daemon.py --verbose         # Debug logging
+python crab_daemon.py --config path    # Custom config file</code></pre>
+    <p>Programmatically:</p>
+    <pre><code>from crab_daemon import CrabDaemon, DaemonConfig, BusConfig, LaneConfig
+
+config = DaemonConfig(
+    identity="my-agent",
+    bus=BusConfig(backend="stdout"),
+    lanes=[LaneConfig(name="cleanup", enabled=True)]
+)
+
+daemon = CrabDaemon(config)
+daemon.run()  # Continuous loop
+daemon.run_once()  # Single iteration</code></pre>
+  </section>
+
+  <section>
+    <h2>Examples</h2>
+    <p>See the <a href="https://github.com/hummbl-dev/crab/tree/main/examples">examples/</a> directory for working code:</p>
+    <ul style="color: var(--fg-dim); padding-left: 1.5rem;">
+      <li><strong>basic.py</strong> — stdout backend, single turn</li>
+      <li><strong>custom_backend.py</strong> — Slack webhook via callback backend</li>
+      <li><strong>docker-compose.yml</strong> — fleet of daemons with different backends</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>
+      CRAB is open source under the <a href="https://github.com/hummbl-dev/crab/blob/main/LICENSE">Apache-2.0 license</a>.<br>
+      Created by <a href="https://hummbl.io">HUMMBL Research Institute</a>.
+    </p>
+    <p style="margin-top: 1rem; font-size: 0.75rem; color: #55574f;">
+      <a href="https://github.com/hummbl-dev/crab">GitHub</a> &middot;
+      <a href="https://github.com/hummbl-dev/crab/issues">Issues</a> &middot;
+      <a href="https://github.com/hummbl-dev/crab/discussions">Discussions</a>
+    </p>
+  </footer>
+
+</body>
+</html>
