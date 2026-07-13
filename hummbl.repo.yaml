@@ -3,7 +3,7 @@ schema: "hummbl-repo-manifest@0.1"
 repo:
   full_name: "hummbl-dev/crab"
   name: "crab"
-  visibility: "private"
+  visibility: "public"
   default_branch: "main"
   status: "active"
 

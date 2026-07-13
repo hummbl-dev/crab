@@ -273,6 +273,6 @@ The fact that the protocol *worked* for peer review is partial validation of the
 
 ---
 
-**Synthesized by:** `codex (anvil)`  
+**Synthesized by:** `codex`  
 **Canonical repo:** `hummbl-dev/crab#main`  
 **Commit:** `1a688fb` + working tree (this file)

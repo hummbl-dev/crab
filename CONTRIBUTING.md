@@ -95,7 +95,7 @@ When reporting bugs, please include:
 
 ## Security Issues
 
-Please do not open public issues for security vulnerabilities. Instead, email `security@hummbl.io` with details. We will respond within 48 hours.
+Please do not open public issues for security vulnerabilities. Instead, email `security@hummbl.dev` with details. We will respond within 48 hours.
 
 ## Code of Conduct
 

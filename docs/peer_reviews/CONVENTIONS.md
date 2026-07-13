@@ -210,6 +210,6 @@ echo "Snapshot saved to: $SNAPFILE"
 
 ---
 
-**Documented by:** `codex (anvil)`  
+**Documented by:** `codex`  
 **Canonical repo:** `hummbl-dev/crab#main`  
 **Source AAR:** `docs/peer_reviews/AAR_2026-05-11.md`

@@ -1,12 +1,12 @@
 # CRAB Repo Boundaries
 
-**Status:** Internal hygiene guidance — not a public release decision.
+**Status:** Hygiene guidance for the CRAB repo.
 
 This repository is currently a private incubator. It contains both the portable CRAB protocol implementation and HUMMBL-internal planning, bridge, research, and brand artifacts. A future public release should use a smaller, audited surface.
 
 ## Public/core candidate
 
-Keep these in a public-ready CRAB artifact after a repo-wide public-release audit. This is a candidate list, not a claim that the current files already satisfy the public-release standard.
+Keep these in a public-ready CRAB artifact after a repo-wide public-release audit. This is the current file inventory after the public/private split audit (2026-07-13).
 
 - `crab_daemon.py` — portable reference daemon.
 - `tests/` — isolated tests only; bridge tests must be mocked or excluded from the public-core subset until they no longer touch HUMMBL-local bus paths.
@@ -53,7 +53,7 @@ Keep these private or move them under an internal namespace before any public re
 
 ## Recommended split strategy
 
-1. Keep this private repo as the incubator.
+1. The private incubator is at hummbl-dev/crab-incubator. This repo is the public artifact.
 2. Classify public-core versus internal artifacts here.
 3. When release is approved, create a fresh public repo from the audited public-core subset.
 4. Avoid `git-filter-repo` unless history preservation is more important than leakage risk.

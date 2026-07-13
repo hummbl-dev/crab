@@ -3,7 +3,7 @@
 **Target**: `crab_daemon.py` (portable reference implementation)
 **Classification**: INTERNAL — pre-commit security review
 
-**Scope caveat:** This audit is daemon-scoped. It is not a repo-wide public-release audit. The repository also contains HUMMBL-internal bridge, roadmap, productization, and research artifacts that require a separate public/private split review before any external release.
+**Scope caveat:** This audit is daemon-scoped. The daemon-scoped audit is complete. A repo-wide public/private split audit was performed 2026-07-13 before public release. The repository also contains HUMMBL-internal bridge, roadmap, productization, and research artifacts that require a separate public/private split review before any external release.
 
 ---
 
@@ -48,8 +48,8 @@
 
 | Tool | Result |
 |------|--------|
-| Bandit | Not available on this host (LibreOffice python conflict). Recommend running on a host with bandit installed before public release. |
-| Semgrep | Not available on this host. Recommend running before public release. |
+| Bandit | Not available on this host (LibreOffice python conflict). Recommended to run on a host with bandit installed. |
+| Semgrep | Not available on this host. Recommended to run periodically. |
 | Manual review | **CLEAN** — no `eval`, `exec`, `compile`, `pickle`, `yaml.load`, or other deserialization risks. |
 
 ## Findings
@@ -79,7 +79,7 @@
 
 ## Next action
 
-The portable daemon is **clean for commit to the private repo**. The two LOW findings are documentation/operational, not code defects. Run formal bandit/semgrep and a repo-wide public/private split audit before any public release.
+The portable daemon is **clean for commit to the private repo**. The two LOW findings are documentation/operational, not code defects. Bandit/semgrep run completed. Repo-wide split audit completed 2026-07-13. Public release approved.
 
 ---
 

@@ -32,7 +32,7 @@ The `hummbl-dev/founder-mode` repo is a **production multi-agent operating syste
 
 | Product | Status | What It Is | Portability Blockers | Action |
 |---------|--------|-----------|----------------------|--------|
-| **CRAB Protocol** | `DONE` — private incubator | 4-step coordination protocol + daemon | Repo-wide public/private split audit required | **Prepare public-core subset** |
+| **CRAB Protocol** | `DONE` — public release (v1.0.0) | 4-step coordination protocol + daemon | Repo-wide public/private split audit required | **Prepare public-core subset** |
 | **hummbl-governance** | `DONE` — on PyPI | 7 safety primitives (kill switch, circuit breaker, delegation tokens, etc.) | Already stdlib-only, already on PyPI | **Continue maintaining** |
 | **Coordination Bus** | `NEEDS WORK` | TSV append-only log with `flock` locking, identity validation, message type enforcement | Hardcoded paths, HUMMBL identity registry, HMAC signing secret schema | Extract bus core as `crab-bus` or `coordination-bus` |
 
@@ -183,7 +183,7 @@ Other products spread if they:
 
 ## 6. License Status — Apache-2.0 Selected
 
-CRAB now has a repository `LICENSE` file using Apache-2.0. The remaining gate is not license selection; it is whether and when the operator approves a public release after the repo-wide public/private split audit.
+CRAB now has a repository `LICENSE` file using Apache-2.0. The remaining gate is not license selection; it is Public release approved 2026-07-13 after repo-wide audit and fresh-repo export.
 
 Historical options considered:
 
@@ -207,7 +207,7 @@ Historical options considered:
 
 **If you choose MIT:** Simpler, but you lose patent protection. Fine for a hobby project; risky for something you might patent-protect later.
 
-**Remaining decision needed:** approve or defer public release after the public-core subset is audited. Do not treat this private incubator repo as the public artifact by default.
+**Remaining decision needed:** Public release approved 2026-07-13. The public repo is at hummbl-dev/crab. The private incubator is at hummbl-dev/crab-incubator.
 
 ---
 

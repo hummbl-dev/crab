@@ -5,13 +5,13 @@
 - **Repository**: `hummbl-dev/crab`
 - **Canonical host**: `https://github.com/hummbl-dev/crab`
 - **Gitea mirror**: `https://<GITEA_HOST>/hummbl-dev/crab`
-- **Visibility**: Private/incubator upstream; Gitea mirror is local-only.
+- **Visibility**: Public repo; Gitea mirror is local-only.
 - **Default branch**: `main`
 - **Owner**: HUMMBL
 
 ## Lifecycle
 
-- **Status**: Active private coordination protocol repo
+- **Status**: Active public coordination protocol repo
 - **Purpose**: Standardize agent workflow observability through bus receipts and protocol traces.
 
 ## Canonical Relationship

@@ -9,7 +9,7 @@
 
 ## Recommendation
 
-Set up Gitea as a **pull mirror** of the GitHub private repo. This gives you:
+Set up Gitea as a **pull mirror** of the GitHub repo. This gives you:
 - Local backup on your hardware (your hardware, your data)
 - Fallback git server if GitHub is unreachable
 - Fast local clones for local-only work
@@ -46,9 +46,9 @@ curl -X PATCH "https://<GITEA_HOST>/api/v1/repos/hummbl-dev/crab" \
   }'
 ```
 
-### 3. Add GitHub credentials for private repo access
+### 3. Add GitHub credentials for repo access
 
-Gitea needs a GitHub PAT with `repo` scope to pull from a private repo:
+Gitea needs a GitHub PAT with `repo` scope to pull from a repo:
 
 ```bash
 # In Gitea web UI: Site Administration → Authentication Sources

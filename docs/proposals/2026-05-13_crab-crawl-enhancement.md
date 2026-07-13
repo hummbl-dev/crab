@@ -41,7 +41,7 @@ Founder-mode / machine-local CRAB surfaces:
 
 - `founder_mode/playbooks/CRAB.md` requires branch, stash, and bus tail before acting, with host-specific bus-global commands.
 - `.claude/rules/crab-protocol.md` adds CWD verification, unresolved proposal reading, verify-before-claim, and host-specific command forms.
-- `.claude/rules/crab-protocol-anvil.md` preserves Bus as mandatory for shared state but allows a narrow local-only exception.
+- `.claude/rules/crab-protocol-host-specific.md` preserves Bus as mandatory for shared state but allows a narrow local-only exception.
 - Machine-global guidance adds mesh surfaces: a bus authority host, peer hosts, mesh/VPN reachability, and no local bus fallback.
 
 Observed live trigger for this proposal:

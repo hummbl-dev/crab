@@ -12,7 +12,7 @@ schema: "krineia-manifest@0.1"
 repo:
   full_name: "hummbl-dev/crab"
   default_branch: "main"
-  visibility: "private"
+  visibility: "public"
 
 authority:
   steward: "HUMMBL Research Institute"

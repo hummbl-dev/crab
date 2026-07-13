@@ -11,7 +11,7 @@
 `hummbl-dev/crab` — CRAB methodology: Check, Reason, Act, Bus for multi-agent coordination
 
 - **Class:** library
-- **Visibility:** private
+- **Visibility:** public
 - **License:** See LICENSE file
 - **Standard:** HUMMBL Repo Standard v0.1
 

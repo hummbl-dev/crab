@@ -179,7 +179,7 @@ Before listing what CRAB will do, here is what it currently gets wrong. These ar
 
 | Product | Status | Blockers | Action |
 |---|---|---|---|
-| **CRAB Protocol** (this repo) | v1.0.0 private incubator | Needs repo-wide public/private split audit + landing page | **P0: approve or defer public release; Apache-2.0 already selected** |
+| **CRAB Protocol** (this repo) | v1.0.0 public release | Needs repo-wide public/private split audit + landing page | **P0: approve or defer public release; Apache-2.0 already selected** |
 | **hummbl-governance** | Already on PyPI | Maintenance only | Continue |
 
 ### Tier 2: Extract with Refactoring (2--4 weeks each)
@@ -404,9 +404,9 @@ The CHECK phase claims to "survey all tracks for cross-track collisions." Here i
   - `docs/branding/HUMMBL_TERMINAL_CORE_DESIGN_SYSTEM.md` (canon + brand)
 - **New concept:** Scuttlebutt Layer -- informal gossip bus for agent fleets
 - **Unified artifact:** `docs/UNIFIED_ROADMAP.md`
-- **Next gate:** Operator approves or defers the public-release timeline after repo-wide public/private split audit (Track 4) AND implement Retrograde Validator (Track 1). These are not mutually exclusive. In fact, Retrograde is a prerequisite for confident public release -- knowing a claim has been validated gives the release a defensibility it would not otherwise have. Running them in parallel is possible but risky: if the release happens before Retrograde is ready, the released code carries unvalidated assertions. Recommended sequence: Retrograde first (2–8 hrs), then public-release audit, then release timeline.
+- **Next gate:** Public release approved 2026-07-13. Repository created fresh from sanitized export. Retrograde Validator (Track 1) remains a development priority for protocol defensibility.
 
-**Why this is not a false dichotomy:** The original phrasing presented these as "pick one" alternatives. They are not. A public release without Retrograde is possible but less defensible. A Retrograde without a release target is possible but has no external validation event. The question is not "which one?" but "in what order, and what risk do we accept if we parallelize?"
+**Why this is not a false dichotomy:** The original phrasing presented these as "pick one" alternatives. They are not. The public release has occurred (2026-07-13). Retrograde remains a development priority to strengthen the protocol's defensibility, but the release did not wait for it. The released code carries assertions that are not yet Retrograde-validated; this is an accepted risk documented in the Evidence Matrix.
 
 ---
 

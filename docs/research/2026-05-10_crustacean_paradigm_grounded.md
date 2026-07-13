@@ -319,7 +319,7 @@ The hybrid model (CRAB default + LOBSTER escalation) mirrors biological reality:
 ### Internal Documentation
 
 18. HUMMBL. (2026). *CRAB Protocol Playbook*. `founder_mode/playbooks/CRAB.md`
-19. HUMMBL. (2026). *Crab Protocol — Host-Specific Exception*. `.agents/rules/crab-protocol-anvil.md (internal fleet rule, not public)`
+19. HUMMBL. (2026). *Crab Protocol — Host-Specific Exception*. `.agents/rules/crab-protocol-host-specific.md (internal fleet rule, not public)`
 20. HUMMBL. (2026). *CRAB Daemon Reference Implementation*. `hummbl-dev/crab`, commit `458f48b` (v1.0.0)
 
 ---

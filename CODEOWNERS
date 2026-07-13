@@ -2,16 +2,16 @@
 # Review authority per path. Steward approval required for normative spec files.
 
 # Governance artifacts
-CONSTITUTION.md          @reubenbowlby
-KRINEIA.md               @reubenbowlby
-hummbl.repo.yaml         @reubenbowlby
-CODEOWNERS               @reubenbowlby
+CONSTITUTION.md          @hummbl-dev/maintainers
+KRINEIA.md               @hummbl-dev/maintainers
+hummbl.repo.yaml         @hummbl-dev/maintainers
+CODEOWNERS               @hummbl-dev/maintainers
 
 # Receipts — steward only
-_receipts/               @reubenbowlby
+_receipts/               @hummbl-dev/maintainers
 
 # ADRs
-docs/adr/                @reubenbowlby
+docs/adr/                @hummbl-dev/maintainers
 
 # Default: steward
-*                        @reubenbowlby
+*                        @hummbl-dev/maintainers

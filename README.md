@@ -238,7 +238,7 @@ Apache-2.0. See [LICENSE](LICENSE).
 - **Daemon**: v1.0 — reference implementation, tested, audited for its portable core
 - **Retrograde**: implemented in the reference daemon as optional validation behavior; not yet a required public protocol phase
 - **Security**: [Redteam audit](AUDIT.md) — daemon-scoped 10/10 PASS; repo-wide public-release audit still required
-- **Publication**: private incubator; see [Repo Boundaries](docs/REPO_BOUNDARIES.md) before any public split
+- **Publication**: public; see [Repo Boundaries](docs/REPO_BOUNDARIES.md) for scope details
 
 ## Repository Health
 
