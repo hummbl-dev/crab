@@ -26,7 +26,7 @@
 | GitHub usernames | Personal GitHub username (case-insensitive) | 0 |
 | Port numbers | 3 specific internal service ports | 0 |
 | IP addresses | IPv4 dotted-quad pattern | 0 |
-| Visibility | `visibility.*private` (case-insensitive) | 0 |
+| Visibility | Private visibility declarations in governance YAML | 0 |
 
 ## Gitleaks report
 
